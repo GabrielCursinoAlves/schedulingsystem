@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx tsx --env-file=.env --watch --no-warnings src/server.ts",
-    "prisma:studio": "npx prisma studio"
+    "prisma:studio": "npx prisma studio" 
   },
   "keywords": [],
   "author": "",
