@@ -1,0 +1,15 @@
+services:
+  pg:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: scheduler_db
+    volumes:
+      - ./docker/init-db:/docker-entrypoint-initdb.d
+      - scheduler_pg_data:/var/lib/postgresql/data
+
+volumes:
+  scheduler_pg_data:
