@@ -7,13 +7,11 @@ const DayOfWeekSchema = z.enum(["monday", "tuesday", "wednesday", "thursday", "f
 
 const SendSmsPayload = z.object({
   type: z.literal("send_sms"),
-  phone: PhoneSchema,
    message: z.string()
 });
 
 const SendAlertPayload = z.object({
   type: z.literal("send_alert"),
-  phone: PhoneSchema,
   message: z.string(),
   severity: z.enum(["low", "medium"], "high").default("medium")
 });
