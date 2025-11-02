@@ -1,6 +1,5 @@
+import {Request, SchemaCreateUserController} from "../types/CreateUserType.ts";
 import {CreateStorageUser} from "../services/CreateStorageUserServices.ts";
-import {SchemaCreateUserController} from "../types/CreateUserType.ts";
-import {Request} from "../types/CreateUserType.ts";
 import {FastifyReply} from "fastify";
 
 export class CreateUser {
