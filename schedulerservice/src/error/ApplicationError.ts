@@ -1,5 +1,5 @@
 export class ApplicationError extends Error {
-  statusCode;
+  statusCode: number;
   constructor(message: string) {
     super(message);
     this.name = 'ApplicationError';

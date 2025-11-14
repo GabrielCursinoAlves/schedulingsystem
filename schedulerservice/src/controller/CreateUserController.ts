@@ -1,10 +1,11 @@
-import {Request, SchemaCreateUserController} from "../types/CreateUserType.ts";
 import {CreateStorageUser} from "../services/CreateStorageUserServices.ts";
+import { Request } from "../types/zod/RequestZodType.ts";
+import type { SchemaTypeZod } from "../types/index.ts";
 import {FastifyReply} from "fastify";
 
 export class CreateUser {
   constructor(private StorageUserServices = new CreateStorageUser()){}
-  handle = async (req: Request<SchemaCreateUserController>, reply: FastifyReply) => {
+  handle = async (req: Request<SchemaTypeZod["SchemaCreateUserController"]>, reply: FastifyReply) => {
     const {username, phone, password} = req.body;
     
     const data = {
@@ -13,11 +14,11 @@ export class CreateUser {
       password
     };
   
-    const user = await this.StorageUserServices.execute(data);
-     
+    const UserCreate = await this.StorageUserServices.execute(data);
+   
     return reply.code(201).send({
       message: "User created successfully",
-      userId: user.id
+      userId: UserCreate.id
     });
 
   }

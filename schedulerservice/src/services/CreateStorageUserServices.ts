@@ -36,6 +36,6 @@ export class CreateStorageUser{
       
       throw new ErrorSystem.ApplicationError("Unexpected database error.");
     }
-
+    
   }
 }

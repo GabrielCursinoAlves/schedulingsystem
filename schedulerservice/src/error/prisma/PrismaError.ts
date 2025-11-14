@@ -6,8 +6,8 @@ export class PrismaUniqueViolationError extends Prisma.PrismaClientKnownRequestE
 
     const code = "P2002";
     const clientVersion = Prisma.prismaVersion.client;
+    
     super(message,{code, clientVersion});
-
     this.name = 'PrismaUniqueViolation';
     this.statusCode = 409;
   }

@@ -4,13 +4,17 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx tsx --env-file=.env --watch --no-warnings src/server.ts",
-    "prisma:studio": "npx prisma studio" 
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:generate": "npx prisma generate",
+    "prisma:studio": "npx prisma studio"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "cron": "^4.3.3",
+    "dayjs": "^1.11.19",
     "fastify": "^5.6.1",
     "fastify-type-provider-zod": "^6.0.0",
     "prisma": "^6.17.1",

@@ -1,9 +1,9 @@
-import {SchemaCreateSystem} from "../schema/zod/CreateSchedulingSystemSchema.ts";
+import {SchemaCreateSystemRouter} from "../schema/zod/CreateSchedulingSystemSchema.ts";
+import type {ControllerZodInstance } from "../types/zod/InstanceZodType.ts";
 import {ControllerSystem} from "../controller/index.ts";
-import {FastifyInstance} from "fastify";
 
-export const CreateSchedulingRouter = async(app:FastifyInstance) => {
+export const CreateSchedulingRouter = async(app:ControllerZodInstance) => {
 
-  app.post("/CreateSchedulingSystem", {schema: {body: SchemaCreateSystem}}, new ControllerSystem.CreateSchedulingSystem().handle);
+  app.post("/CreateSchedulingSystem", {schema: {body: SchemaCreateSystemRouter}}, new ControllerSystem.CreateSchedulingSystem().handle);
 
 }
