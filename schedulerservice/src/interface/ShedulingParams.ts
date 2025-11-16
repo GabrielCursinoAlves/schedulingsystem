@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 
 interface BaseSheduling {
-  userId: string,
   run_at: Date,
+  userId: string,
   recurrence_pattern: string
 };
 
@@ -12,7 +12,12 @@ export interface SchedulingParams extends BaseSheduling {
 
 export interface ShedulingReturns extends BaseSheduling {
   id: string,
-  payload: Prisma.JsonValue,
+  created_at: Date,
   is_recurring: boolean,
-  created_at: Date
+  payload: Prisma.JsonValue,
+  dataPayload: {
+    aggregate_type: string,
+    event_type: string
+    phone: string,
+  }
 }

@@ -1,10 +1,10 @@
-import {CreateStorageUser} from "../services/CreateStorageUserServices.ts";
+import { RepositoriesSystem } from "../repositories/index.ts";
 import { Request } from "../types/zod/RequestZodType.ts";
 import type { SchemaTypeZod } from "../types/index.ts";
 import {FastifyReply} from "fastify";
 
 export class CreateUser {
-  constructor(private StorageUserServices = new CreateStorageUser()){}
+  constructor(private StorageUserServices = new RepositoriesSystem.CreateStorageUser()){}
   handle = async (req: Request<SchemaTypeZod["SchemaCreateUserController"]>, reply: FastifyReply) => {
     const {username, phone, password} = req.body;
     
