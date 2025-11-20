@@ -4,20 +4,27 @@ interface BaseSheduling {
   run_at: Date,
   userId: string,
   recurrence_pattern: string
+  payload: Prisma.InputJsonValue
 };
 
-export interface SchedulingParams extends BaseSheduling {
-  payload: Prisma.InputJsonValue,
+export interface SchedulingMetadata {
+  phone: string,
+  event_type: string,
+  aggregate_type: string
 }
 
-export interface ShedulingReturns extends BaseSheduling {
+export interface SchedulingPayload {
+  jobId: string,
+  phone: string,
+  userId: string
+};
+
+export interface SchedulingParams extends BaseSheduling {}
+
+export interface ShedulingReturns extends Omit<BaseSheduling, "payload">{
   id: string,
   created_at: Date,
   is_recurring: boolean,
   payload: Prisma.JsonValue,
-  dataPayload: {
-    aggregate_type: string,
-    event_type: string
-    phone: string,
-  }
+  dataAdditional: SchedulingMetadata
 }
