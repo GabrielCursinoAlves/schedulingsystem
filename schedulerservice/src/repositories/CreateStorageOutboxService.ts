@@ -3,7 +3,7 @@ import { OutboxParams } from "../interface/OutboxParams.ts";
 import { ErrorSystem } from "../error/index.ts";
 
 export class CreateStorageOutboxService {
-  async execute(data: OutboxParams, tsxprisma: Transaction): Promise<void>{
+  async execute(data: OutboxParams, tsxprisma: Transaction): Promise<void> {
     const { aggregate_type, scheduleId, event_type, payload} = data;
    
     try {

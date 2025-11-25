@@ -7,8 +7,8 @@ import { CronObject } from "../cron/CronObject.ts";
 export function CronPatternValidation(data: SchemaTypeZod["SchemaCreateSchedulingRecurrence"]){
   if(data.type == "once") return Object.values(CronObject()).join(" ");
 
-  const {type, time_of_day, day_of_week} = data;
-  const [hour, minute] = data.time_of_day.split(":");
+  const { type, day_of_week } = data;
+  const [ hour, minute ] = data.time_of_day.split(":");
 
   const dataCron = type === "week" ? { type, hour, minute, day_of_week } : { type, hour, minute };
   const result = SchemaSchedulingJobCron.safeParse(dataCron);

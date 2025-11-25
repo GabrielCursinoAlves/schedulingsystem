@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 const HoursPatterns = z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/);
 const DayOfWeekSchema = z.enum(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]);
@@ -18,11 +18,12 @@ const WeeklySchema = z.object({
   day_of_week: DayOfWeekSchema  
 }).passthrough();
 
-export const Schemas = {
+
+export const Schemas: Record<"once" | "daily" | "week", z.ZodObject<any>> = {
   "once": OnceSchema,
   "daily": DailySchema,
   "week": WeeklySchema
-};
+}
 
 export const SchemaRecurrencePattern = z.discriminatedUnion("type", [
   OnceSchema,
