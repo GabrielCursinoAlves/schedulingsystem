@@ -1,5 +1,6 @@
-interface BaseUser {
+export interface BaseUser {
   username: string,
+  email: string,
   phone: string,
   password: string
 }

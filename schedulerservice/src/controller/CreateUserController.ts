@@ -4,7 +4,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorValidation } from "../error/index.ts";
 
 export class CreateUser {
-  constructor(private StorageUserServices = new RepositoriesSystem.CreateStorageUser()){}
+  constructor(private StorageUserServices = new RepositoriesSystem.CreateUser()){}
   handle = async (req: FastifyRequest, reply: FastifyReply) => {
     const result = SchemaCreateUserRouter.safeParse(req.body);
     
@@ -13,10 +13,11 @@ export class CreateUser {
     }
 
     if(result.data){
-      const { username, phone, password } = result.data;
+      const { username, phone, email, password } = result.data;
           
       const data = {
         username,
+        email,
         phone: phone.replace(/\D/g, ''),
         password
       };

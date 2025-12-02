@@ -4,6 +4,7 @@ CREATE TABLE "User" (
     "username" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -13,8 +14,9 @@ CREATE TABLE "User" (
 CREATE TABLE "ScheduledJob" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "payload" JSONB NOT NULL,
     "run_at" TIMESTAMP(3) NOT NULL,
-    "recurrence_pattern" JSONB NOT NULL,
+    "recurrence_pattern" TEXT NOT NULL,
     "is_recurring" BOOLEAN NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -24,7 +26,7 @@ CREATE TABLE "ScheduledJob" (
 -- CreateTable
 CREATE TABLE "Outbox" (
     "id" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "aggregate_type" TEXT NOT NULL DEFAULT '',
     "scheduleId" TEXT NOT NULL,
     "event_type" TEXT NOT NULL,
     "payload" JSONB NOT NULL,
@@ -35,6 +37,9 @@ CREATE TABLE "Outbox" (
 
     CONSTRAINT "Outbox_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "ScheduledJob" ADD CONSTRAINT "ScheduledJob_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

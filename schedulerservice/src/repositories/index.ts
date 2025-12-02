@@ -1,9 +1,9 @@
-import { CreateStorageShedulingSystem } from "./CreateStorageShedulingSystemService.ts";
-import { CreateStorageOutboxService } from "./CreateStorageOutboxService.ts";
-import { CreateStorageUser } from "./CreateStorageUserServices.ts";
+import { CreateShedulingSystem } from "./CreateShedulingSystemRepositories.ts";
+import { CreateOutboxService } from "./CreateOutboxRepositores.ts";
+import { CreateUser } from "./CreateUserRepositories.ts";
 
 export const RepositoriesSystem = {
-  CreateStorageShedulingSystem,
-  CreateStorageOutboxService,
-  CreateStorageUser
+  CreateShedulingSystem,
+  CreateOutboxService,
+  CreateUser
 };
