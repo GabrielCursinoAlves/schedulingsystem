@@ -1,10 +1,7 @@
 import { SchemaCreateSystemRouter } from "../schema/zod/CreateSchedulingSystemSchema.ts";
-import { PayloadPatternValidation } from "../lib/validation/PayloadPatternValidation.ts";
-import { CronPatternValidation } from "../lib/validation/CronPatternValidation.ts";
 import { JobCreationService } from "../services/JobCreationService.ts";
-import { ErrorSystem, ErrorValidation } from "../error/index.ts";
 import { FastifyReply, FastifyRequest } from "fastify";
-import dayjs from "dayjs";
+import { ErrorValidation } from "../error/index.ts";
 
 export class CreateSchedulingSystem {
   constructor(private SchedulingTransaction = new JobCreationService()){}
@@ -18,18 +15,11 @@ export class CreateSchedulingSystem {
     if(result.data){
       const {user_id, payload, run_at, recurrence_pattern} = result.data;
 
-      const payloadPattern = PayloadPatternValidation(payload);
-      const cronPatternRecurrence = CronPatternValidation(recurrence_pattern);
-
-      if(!dayjs(run_at).isValid()){
-        throw new ErrorSystem.ApplicationError("The date is not in the correct format.")
-      }
-
       const data = {
-        userId: user_id,
-        payload: payloadPattern,
+        user_id,
+        payload,
         run_at,
-        recurrence_pattern: cronPatternRecurrence 
+        recurrence_pattern
       };
 
       await this.SchedulingTransaction.execute(data);

@@ -5,7 +5,7 @@ import { scryptSync, randomBytes, Hash } from "node:crypto";
 import { ErrorSystem } from "../error/index.ts";
 
 export class CreateUser {
-  async execute(data:UserParams): Promise<UserReturns> {
+  async execute(data: UserParams): Promise<UserReturns> {
     const {username, phone, email, password} = data;
     
     const userEmailExist = await prisma.user.findUnique({ where:{ email }}); 
