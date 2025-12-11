@@ -13,9 +13,7 @@ export function CronPatternValidation(data: SchemaTypeZod["SchemaCreateSchedulin
   const dataCron = type === "week" ? { type, hour, minute, day_of_week } : { type, hour, minute };
   const result = SchemaSchedulingJobCron.safeParse(dataCron);
 
-  if(!result.success){
-    throw new ErrorValidation.ZodValidationError(result.error);
-  }
+  if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
   
   const generateData = GenerateDataCron(result.data);
   return generateData;

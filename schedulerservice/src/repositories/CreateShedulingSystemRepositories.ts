@@ -6,7 +6,7 @@ import { ErrorSystem } from "../error/index.ts";
 
 export class CreateShedulingSystem {
   execute = async(data: SchedulingParams, tsxprisma: Transaction): Promise<ShedulingReturns> => {
-    const {userId, payload, run_at, recurrence_pattern} = data;
+    const { userId, payload, run_at, recurrence_pattern } = data;
     
     try {
       const user = await tsxprisma.user.findUnique({ 

@@ -9,9 +9,7 @@ export function PayloadPatternValidation(data: SchemaTypeZod["SchemaCreateSchedu
   const dataPayload = type == "send_alert" ? {type, message, severity: data.severity} : {type, message};
   const result = SchemaSendPayload.safeParse(dataPayload);
 
-  if(!result.success){
-    throw new ErrorValidation.ZodValidationError(result.error);
-  }
+  if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
 
   const payloadValid = result.data;
 

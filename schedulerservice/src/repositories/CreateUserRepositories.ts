@@ -10,9 +10,7 @@ export class CreateUser {
     
     const userEmailExist = await prisma.user.findUnique({ where:{ email }}); 
   
-    if(userEmailExist) {
-      throw new ErrorSystem.NotFound("This email already exists.");
-    }
+    if(userEmailExist) throw new ErrorSystem.NotFound("This email already exists.");
     
     const salt = randomBytes(16).toString('hex');
     const hash = scryptSync(password, salt, 64).toString('hex');

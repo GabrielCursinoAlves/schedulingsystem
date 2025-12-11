@@ -8,9 +8,9 @@ import { SchemaTypeZod } from "../types/index.ts";
 import { ErrorSystem } from "../error/index.ts";
 
 export class JobCreationService {
-  execute = async(data: SchemaTypeZod["SchemaCreateSystemService"]): Promise<void> => {
+  execute = async(user_id: string, data: SchemaTypeZod["SchemaCreateSystemService"]): Promise<void> => {
     try {
-      const {user_id, payload, run_at, recurrence_pattern } = data;
+      const { payload, run_at, recurrence_pattern } = data;
 
       let payloadPattern = PayloadPatternValidation(payload);
       const cronPatternRecurrence = CronPatternValidation(recurrence_pattern);
@@ -43,12 +43,12 @@ export class JobCreationService {
           aggregate_type,
         };
        
-        await new RepositoriesSystem.CreateOutboxService().execute(dataOutbox, tx);
+        await new RepositoriesSystem.CreateOutbox().execute(dataOutbox, tx);
        
       });
 
     } catch (error) {
-      if(error instanceof ErrorSystem.ApplicationError){
+      if(error instanceof ErrorSystem.ApplicationError) {
         throw new ErrorSystem.ApplicationError(`Transaction process failure: ${error.message}`);
       }
     }

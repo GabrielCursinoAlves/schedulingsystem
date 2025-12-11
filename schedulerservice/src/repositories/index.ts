@@ -1,9 +1,11 @@
 import { CreateShedulingSystem } from "./CreateShedulingSystemRepositories.ts";
-import { CreateOutboxService } from "./CreateOutboxRepositores.ts";
+import { CreateOutbox } from "./CreateOutboxRepositores.ts";
 import { CreateUser } from "./CreateUserRepositories.ts";
+import { CreateSession } from "./CreateSession.ts";
 
 export const RepositoriesSystem = {
   CreateShedulingSystem,
-  CreateOutboxService,
+  CreateSession,
+  CreateOutbox,
   CreateUser
 };
