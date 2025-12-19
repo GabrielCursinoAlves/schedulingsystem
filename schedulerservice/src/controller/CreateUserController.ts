@@ -10,23 +10,16 @@ export class CreateUser {
     
     if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
 
-    if(result.data){
-      const { username, phone, email, password } = result.data;
+    const { username, phone, email, password } = result.data;
           
-      const data = {
-        username,
-        email,
-        phone: phone.replace(/\D/g, ''),
-        password
-      };
+    const userData = { username, email, phone: phone.replace(/\D/g, ''), password };
     
-      const UserCreate = await this.StorageUserServices.execute(data);
+    const UserCreate = await this.StorageUserServices.execute(userData);
     
-      return reply.code(201).send({
-        message: "User created successfully",
-        userId: UserCreate.id
-      });
+    return reply.code(201).send({
+      message: "User created successfully",
+      userId: UserCreate.id
+    });
     
-    }
   }
 }

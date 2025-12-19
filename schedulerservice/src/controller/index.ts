@@ -7,5 +7,5 @@ export const ControllerSystem = {
   CreateSchedulingSystem,
   UpdateAuthRefresh,
   CreateSession,
-  CreateUser
+  CreateUser 
 };

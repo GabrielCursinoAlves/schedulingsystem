@@ -8,9 +8,8 @@ export class SessionStorage {
   verify = async(data: SessionParams): Promise<SessionReturns> => {
     const { email, password } = data;
 
-    const user = await prisma.user.findUnique({ 
-      where:{ email }, 
-      select:{ id: true, password: true } 
+    const user = await prisma.user.findUnique({ where:{ email }, 
+      select:{id: true, password: true} 
     });
     
     if(!user) throw new ErrorSystem.UnauthorizedError("Email Invalid authentication credentials.");
@@ -23,12 +22,11 @@ export class SessionStorage {
     if(!timingSafeEqual(hashBuffer, verifyHash)) throw new ErrorSystem.UnauthorizedError("Password Invalid authentication credentials.")
 
     const acessToken = JWTProvider(user.id, "1h");
-    const refreshToken = JWTProvider(user.id, "2h");
+    const refreshToken = JWTProvider(user.id, "7d");
 
     return {
-      message: "User logged in success",
       user_id: user.id,
-      expiresAt: "2h",
+      expiresAt: "7d",
       refreshToken,
       acessToken
     }

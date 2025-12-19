@@ -5,3 +5,5 @@ declare module 'fastify' {
     user: jwt.JwtPayload;
   }
 }
+
+export type JwtPayloadReturn = string | JwtPayload;
