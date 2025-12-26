@@ -1,6 +1,6 @@
 import { SessionRefreshReturns, SessionReturns } from "../interface/SessionParams.ts";
 import { JWTProvider } from "../lib/middleware/JWTProvider.ts";
-import { JwtPayloadReturn } from "../types/jwt/JWTPayload.ts";
+//import { JwtPayloadReturn } from "../types/jwt/JWTPayload.ts";
 import { RepositoriesSystem } from "../repositories/index.ts";
 import { prisma } from "../config/prisma/Connection.ts";
 import { SchemaTypeZod } from "../types/index.ts";
@@ -8,16 +8,16 @@ import { ErrorSystem } from "../error/index.ts";
 import jwt from "jsonwebtoken";
 
 export class RefreshToken {
-  verify = (data: SchemaTypeZod["SchemaRefreshToken"]): JwtPayloadReturn => {
+  verify = (data: SchemaTypeZod["SchemaRefreshToken"]): void => {
     const secret =  process.env.SECRET_KEY;
     if(!secret) throw new ErrorSystem.ApplicationError("SECRET KEY was not defined.");
 
     const { refreshToken } = data;
+   
     if(!refreshToken) throw new ErrorSystem.UnauthorizedError("Malformed Authorization header.");
 
     try {
-      const refreshTokenValid = jwt.verify(refreshToken, secret);
-      return refreshTokenValid;
+      jwt.verify(refreshToken, secret);
 
     } catch (error) {
 
@@ -31,10 +31,10 @@ export class RefreshToken {
 
   validateAndGetSession = async(refreshToken: string): Promise<SessionRefreshReturns> => {
     const session = await prisma.session.findUnique({where:{ token: refreshToken } });
-
+    
     if(!session) 
-      throw new ErrorSystem.UnauthorizedError("Token Invalid authentication credentials.");
-     
+      throw new ErrorSystem.UnauthorizedError("RefreshToken Invalid authentication credentials.");
+    
     if(session.expiresAt && new Date() > session.expiresAt) 
       throw new ErrorSystem.ApplicationError("Session expired. Please log in again.");
 

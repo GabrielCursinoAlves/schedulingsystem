@@ -4,12 +4,13 @@ import { ErrorSystem } from "../error/index.ts";
 
 export class CreateOutbox {
   async execute(data: OutboxParams, tsxprisma: Transaction): Promise<void> {
-    const { aggregate_type, scheduleId, event_type, payload} = data;
+    const { aggregate_type, scheduleId, scheduledAt, event_type, payload} = data;
    
     try {
       await tsxprisma.outbox.create({
         data:{
           aggregate_type,
+          scheduledAt,
           scheduleId,
           event_type,
           payload

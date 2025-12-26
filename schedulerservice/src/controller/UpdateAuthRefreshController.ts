@@ -14,8 +14,7 @@ export class UpdateAuthRefresh {
 
     const { refreshToken } = result.data;
 
-    const isTokenValid = this.refreshToken.verify({ refreshToken });
-    if(!isTokenValid) throw new ErrorSystem.UnauthorizedError("RefreshToken Invalid authentication credentials.");
+    this.refreshToken.verify({ refreshToken });
 
     const tokenData = await this.refreshToken.generate({refreshToken});
 

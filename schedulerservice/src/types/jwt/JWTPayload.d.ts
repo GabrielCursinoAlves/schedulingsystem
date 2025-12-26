@@ -6,4 +6,4 @@ declare module 'fastify' {
   }
 }
 
-export type JwtPayloadReturn = string | JwtPayload;
+//export type JwtPayloadReturn = string | JwtPayload;
