@@ -3,6 +3,6 @@ import { Prisma } from "../generated/prisma/client.ts";
 
 export interface OutboxParams extends Omit<SchedulingMetadata, "phone"> { 
   scheduledAt: Date,
-  scheduleId: string, 
+  scheduleId: string,
   payload: Prisma.InputJsonValue
 }

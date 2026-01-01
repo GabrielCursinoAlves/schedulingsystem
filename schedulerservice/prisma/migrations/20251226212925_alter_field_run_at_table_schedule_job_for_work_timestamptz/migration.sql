@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ScheduledJob" ALTER COLUMN "run_at" SET DATA TYPE TIMESTAMPTZ;

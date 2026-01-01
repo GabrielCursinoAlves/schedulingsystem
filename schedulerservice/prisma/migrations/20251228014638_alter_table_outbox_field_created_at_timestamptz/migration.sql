@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Outbox" ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMPTZ;

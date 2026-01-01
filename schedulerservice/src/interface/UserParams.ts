@@ -9,5 +9,5 @@ export interface UserParams extends BaseUser {}
 
 export interface UserReturns extends BaseUser {
   id: string,
-  createdAt: Date
+  created_at: Date
 }
