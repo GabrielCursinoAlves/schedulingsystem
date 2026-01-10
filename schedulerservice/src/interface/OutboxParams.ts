@@ -1,9 +1,6 @@
+import type { SchedulingMetadata } from "./ShedulingParams";
 import { Prisma } from "@prisma/client"
 
-export interface OutboxParams {
-  aggregate_type: string,
-  scheduleId: string
-  event_type: string,
-  phone: string,
+export interface OutboxParams extends Omit<SchedulingMetadata, "phone">{
   payload: Prisma.InputJsonValue
 }
