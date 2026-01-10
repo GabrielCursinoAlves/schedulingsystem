@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ErrorSystem } from "../../error";
+import { ErrorSystem } from "../../error/index.ts";
 import jwt from "jsonwebtoken";
 
 export async function AuthSession(req: FastifyRequest, reply: FastifyReply){
