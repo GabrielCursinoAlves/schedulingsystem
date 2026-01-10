@@ -8,7 +8,8 @@ import { prisma } from "../config/prisma/Connection.ts";
 import { SchemaTypeZod } from "../types/index.ts";
 import { ErrorSystem } from "../error/index.ts";
 
-export class JobCreation {
+export class JobCreation { 
+  
   execute = async(user_id: string, data: SchemaTypeZod["SchemaCreateSystemService"]): Promise<void> => {
     try {
       const { payload, run_at, recurrence_pattern } = data;
@@ -38,15 +39,15 @@ export class JobCreation {
             jobId: id
           }
         );
-
+        
         const dataOutbox = { 
-          payload,
+          payload: payloadPattern,
           event_type,
           scheduledAt,
           scheduleId: id, 
           aggregate_type,
         };
-      
+        
         await new RepositoriesSystem.CreateOutbox().execute(dataOutbox, tx);
        
       });

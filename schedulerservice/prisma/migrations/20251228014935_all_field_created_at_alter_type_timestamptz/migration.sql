@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "ScheduledJob" ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMPTZ;
+
+-- AlterTable
+ALTER TABLE "Session" ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMPTZ;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMPTZ;

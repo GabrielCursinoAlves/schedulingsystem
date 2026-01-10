@@ -13,7 +13,7 @@ model User {
   phone        String
   password     String
   email        String         @unique
-  createdAt    DateTime       @default(now())
+  created_at   DateTime       @default(now()) @db.Timestamptz()
   ScheduledJob ScheduledJob[]
   sessions     Session[]
 }
@@ -23,10 +23,10 @@ model ScheduledJob {
   userId             String
   payload            Json
   AuthorJob          User     @relation(fields: [userId], references: [id])
-  run_at             DateTime
+  run_at             DateTime @db.Timestamptz()
   recurrence_pattern String
   is_recurring       Boolean
-  created_at         DateTime @default(now())
+  created_at         DateTime @default(now()) @db.Timestamptz()
 }
 
 model Outbox {
@@ -36,10 +36,11 @@ model Outbox {
   event_type     String
   payload        Json
   status         String    @default("pending")
+  execution_id   String?   @unique
   scheduledAt    DateTime  @default(now()) @db.Timestamptz()
   error_reason   String?
   processed_at   DateTime?
-  created_at     DateTime  @default(now())
+  created_at     DateTime  @default(now()) @db.Timestamptz()
 }
 
 model Session {
@@ -48,5 +49,5 @@ model Session {
   AuthorJob  User     @relation(fields: [userId], references: [id])
   token      String   @unique
   expiresAt  DateTime
-  created_at DateTime @default(now())
+  created_at DateTime @default(now()) @db.Timestamptz()
 }

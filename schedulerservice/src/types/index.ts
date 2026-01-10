@@ -3,6 +3,7 @@ import { SchemaRecurrencePattern } from "../schema/zod/SchedulingRecurrenceSchem
 import { SchemaSchedulingJobCron } from "../schema/zod/SchedulingJobSchema.ts";
 import { SchemaSendPayload } from "../schema/zod/SchedulingPayloadSchema.ts";
 import { SchemaRefreshToken } from "../schema/zod/RefreshTokenSchema.ts";
+import { WorkPayload } from "../schema/zod/WorkPayloadSchema.ts";
 import { z } from "zod";
 
 export type SchemaTypeZod = {
@@ -10,5 +11,6 @@ export type SchemaTypeZod = {
   SchemaCreateSchedulingRecurrence: z.infer<typeof SchemaRecurrencePattern>,
   SchemaCreateSystemService: z.infer<typeof SchemaCreateSystemRouter>,
   SchemaCreateSchedulingPayload: z.infer<typeof SchemaSendPayload>,
-  SchemaRefreshToken: z.infer<typeof SchemaRefreshToken>
+  SchemaRefreshToken: z.infer<typeof SchemaRefreshToken>,
+  SchemaWorkPayload: z.infer<typeof WorkPayload>
 };

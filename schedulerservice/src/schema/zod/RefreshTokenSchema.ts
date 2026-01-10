@@ -1,5 +1,5 @@
 import { z } from "zod";
 
 export const SchemaRefreshToken = z.object({
-  refreshToken: z.string()
+  refreshToken: z.string().uuid()
 });
