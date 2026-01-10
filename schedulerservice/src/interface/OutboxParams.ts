@@ -1,5 +1,5 @@
-import type { SchedulingMetadata } from "./ShedulingParams";
-import { Prisma } from "@prisma/client"
+import type { SchedulingMetadata } from "./ShedulingParams.ts";
+import { Prisma } from "../generated/prisma/client.ts";
 
 export interface OutboxParams extends Omit<SchedulingMetadata, "phone"> {
   scheduleId: string, 

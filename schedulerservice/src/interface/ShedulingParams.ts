@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../generated/prisma/client.ts";
 
 interface BaseSheduling {
   run_at: Date,

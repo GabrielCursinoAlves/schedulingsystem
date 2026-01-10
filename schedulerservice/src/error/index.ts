@@ -1,10 +1,10 @@
-import {ApplicationError, NotFoundError} from "./ApplicationError.ts";
-import {PrismaUniqueViolationError} from "./prisma/PrismaError.ts";
+import {ApplicationError, NotFoundError, UnauthorizedError, ValidationError} from "./ApplicationError.ts";
 import {ZodValidationError} from "./zod/ZodError.ts";
 
 export const ErrorSystem = {
-  "PrismaUniqueViolation": PrismaUniqueViolationError,
+  "UnauthorizedError": UnauthorizedError,
   "ApplicationError": ApplicationError,
+  "ValidationError": ValidationError,
   "NotFound": NotFoundError
 };
 

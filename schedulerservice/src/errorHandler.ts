@@ -1,5 +1,5 @@
-import {FastifyRequest, FastifyReply} from "fastify";
 import { ErrorSystem, ErrorValidation } from "./error/index.ts";
+import {FastifyRequest, FastifyReply} from "fastify";
 
 export const ErrorHandler = (
   error: Error, 
@@ -22,18 +22,6 @@ export const ErrorHandler = (
       statusCode: error.statusCode,
       message: error.message,
       issues: error.issues
-    });
-  }
-
-  const ErrorClass = ErrorSystem[error.name as keyof typeof ErrorSystem]; 
-  
-  if (error instanceof ErrorClass) {
-    
-    const prismaInstance = new ErrorClass(error.message);
-     return reply.status(prismaInstance.statusCode).send({
-      error: prismaInstance.name,
-      statusCode: prismaInstance.statusCode,
-      message: prismaInstance.message,
     });
   }
 

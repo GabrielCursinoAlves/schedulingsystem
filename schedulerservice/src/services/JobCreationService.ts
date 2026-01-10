@@ -6,14 +6,13 @@ import { ErrorSystem } from "../error/index.ts";
 
 export class JobCreationService {
   execute = async(data: SchedulingParams): Promise<void> => {
-    
     try {
       let { payload } = data;
       
       await prisma.$transaction(async(tx) => {
-        const ShedulingSystem = await new RepositoriesSystem.CreateStorageShedulingSystem().execute(data, tx);
-        const { id, userId, dataAdditional } = ShedulingSystem;
+        const ShedulingSystem = await new RepositoriesSystem.CreateShedulingSystem().execute(data, tx);
         
+        const { id, userId, dataAdditional } = ShedulingSystem;
         const { aggregate_type, event_type, phone }: SchedulingMetadata = dataAdditional;
         
         payload = ensureJsonObject(
@@ -31,12 +30,13 @@ export class JobCreationService {
           aggregate_type,
         };
        
-        await new RepositoriesSystem.CreateStorageOutboxService().execute(dataOutbox, tx);
+        await new RepositoriesSystem.CreateOutboxService().execute(dataOutbox, tx);
        
       });
 
     } catch (error) {
-      if(error instanceof ErrorSystem["ApplicationError"]){
+     
+      if(error instanceof ErrorSystem.ApplicationError){
         throw new ErrorSystem.ApplicationError(`Transaction process failure: ${error.message}`);
       }
     }

@@ -1,7 +1,7 @@
 {
   "name": "schedulingsystem",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "dev": "npx tsx --env-file=.env --watch --no-warnings src/server.ts",
     "prisma:migrate": "npx prisma migrate dev",
@@ -13,16 +13,19 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.0.1",
     "cron": "^4.3.3",
     "dayjs": "^1.11.19",
     "fastify": "^5.6.1",
     "fastify-type-provider-zod": "^6.0.0",
-    "prisma": "^6.17.1",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^7.0.1",
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@prisma/client": "^6.17.1",
+    "@prisma/client": "^7.0.1",
     "@tsconfig/node22": "^22.0.2",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.7.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
