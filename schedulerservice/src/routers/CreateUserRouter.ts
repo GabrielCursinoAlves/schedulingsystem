@@ -1,10 +1,9 @@
-import {FastifyInstance} from "fastify";
-
-import { SchemaCreateUser } from "../schema/zod/CreateUserSchema.ts";
+import { SchemaCreateUserRouter } from "../schema/zod/CreateUserSchema.ts";
 import { ControllerSystem } from "../controller/index.ts";
+import {FastifyInstance} from "fastify";
 
 export const CreateUserRouter = async(app:FastifyInstance) => {
 
-  app.post("/CreateUser", SchemaCreateUser, new ControllerSystem.CreateUser().handle);
+  app.post("/CreateUser", {schema: {body: SchemaCreateUserRouter}}, new ControllerSystem.CreateUser().handle);
 
 }
