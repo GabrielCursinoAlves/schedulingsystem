@@ -1,4 +1,4 @@
-import { SchemaSendPayload } from "../../schema/zod/CreateSchedulingSystemSchema.ts";
+import { SchemaSendPayload } from "../../schema/zod/SchedulingPayloadSchema.ts";
 import { ErrorValidation } from "../../error/index.ts";
 import { SchemaTypeZod } from "../../types";
 import { Prisma } from "@prisma/client";
@@ -13,5 +13,7 @@ export function PayloadPatternValidation(data: SchemaTypeZod["SchemaCreateSchedu
     throw new ErrorValidation.ZodValidationError(result.error);
   }
 
-  return result as Prisma.InputJsonValue;
+  const payloadValid: Prisma.InputJsonValue = result.data;
+
+  return payloadValid;
 }

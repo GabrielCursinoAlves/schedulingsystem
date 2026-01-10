@@ -1,11 +1,11 @@
-import {UserParams, UserReturns} from "../interface/UserParams.ts";
-import {prisma} from "../config/prisma/Connection.ts";
-import {ErrorSystem} from "../error/index.ts";
-import {Prisma} from "@prisma/client";
+import { UserParams, UserReturns } from "../interface/UserParams.ts";
+import { prisma } from "../config/prisma/Connection.ts";
+import { ErrorSystem } from "../error/index.ts";
+import { Prisma } from "@prisma/client";
 import crypto from "node:crypto";
 
-export class CreateStorageUser{
-  async execute(data:UserParams):Promise<UserReturns> {
+export class CreateStorageUser {
+  async execute(data:UserParams): Promise<UserReturns> {
     const {username, phone, password} = data;
     
     const userExist = await prisma.user.findUnique({where:{ phone }});

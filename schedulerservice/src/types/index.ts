@@ -5,7 +5,7 @@ import { SchemaSendPayload } from "../schema/zod/SchedulingPayloadSchema.ts";
 import { SchemaCreateUserRouter } from "../schema/zod/CreateUserSchema.ts";
 import {z} from "zod";
 
-export type  SchemaTypeZod = {
+export type SchemaTypeZod = {
   SchemaCreateSchedulingController: z.infer<typeof SchemaCreateSystemRouter>,
   SchemaSchedulingJobCronController: z.infer<typeof SchemaSchedulingJobCron>,
   SchemaCreateSchedulingRecurrence: z.infer<typeof SchemaRecurrencePattern>,

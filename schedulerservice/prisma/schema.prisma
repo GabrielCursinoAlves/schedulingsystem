@@ -28,13 +28,13 @@ model ScheduledJob {
 }
 
 model Outbox {
-  id           String    @id
-  type         String
-  scheduleId   String
-  event_type   String
-  payload      Json
-  status       String    @default("pending")
-  error_reason String?
-  processed_at DateTime?
-  created_at   DateTime  @default(now())
+  id             String    @id @default(uuid())
+  aggregate_type String    @default("")
+  scheduleId     String
+  event_type     String
+  payload        Json
+  status         String    @default("pending")
+  error_reason   String?
+  processed_at   DateTime?
+  created_at     DateTime  @default(now())
 }
