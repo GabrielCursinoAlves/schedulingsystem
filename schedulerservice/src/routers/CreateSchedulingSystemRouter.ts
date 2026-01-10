@@ -2,7 +2,7 @@ import { validatorCompiler, serializerCompiler } from "fastify-type-provider-zod
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import {FastifyInstance} from "fastify";
 
-import {SchemaCreateSystem} from "../config/schema/CreateSchedulingSystemSchema.ts";
+import {SchemaCreateSystem} from "../schema/zod/CreateSchedulingSystemSchema.ts";
 import {ControllerSystem} from "../controller/index.ts";
 
 export const CreateSchedulingRouter = async(app:FastifyInstance) => {
