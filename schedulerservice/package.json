@@ -1,0 +1,26 @@
+{
+  "name": "schedulingsystem",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tsx --env-file=.env --watch --no-warnings src/server.ts",
+    "prisma:studio": "npx prisma studio"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "fastify": "^5.6.1",
+    "fastify-type-provider-zod": "^6.0.0",
+    "prisma": "^6.17.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@prisma/client": "^6.17.1",
+    "@tsconfig/node22": "^22.0.2",
+    "@types/node": "^24.7.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
