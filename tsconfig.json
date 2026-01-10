@@ -1,0 +1,9 @@
+{
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "Node",
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  }
+}
