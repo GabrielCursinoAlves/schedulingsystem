@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod"; 
 
 const OnceDaily = z.object({ 
   type: z.literal('daily'),

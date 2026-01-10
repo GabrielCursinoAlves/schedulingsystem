@@ -3,7 +3,6 @@ import { ensureJsonObject } from "../lib/prisma/EnsureJsonObject.ts";
 import { RepositoriesSystem } from "../repositories/index.ts";
 import { prisma } from "../config/prisma/Connection.ts";
 import { ErrorSystem } from "../error/index.ts";
-import { id } from "zod/locales";
 
 export class JobCreationService {
   execute = async(data: SchedulingParams): Promise<void> => {

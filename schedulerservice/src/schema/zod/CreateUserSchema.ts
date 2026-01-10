@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod";
 
 const PhoneSchema = z.string().min(10).max(15).regex(/^\+?\d{10,15}$/);
 
