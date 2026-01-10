@@ -1,9 +1,9 @@
-import { SchemaRefreshToken } from "../schema/zod/RefreshTokenSchema.ts";
-import { RefreshToken } from "../services/RefreshTokenService.ts";
-import { ErrorSystem, ErrorValidation } from "../error/index.ts";
-import { RepositoriesSystem } from "../repositories/index.ts";
-import { expiresInToMs } from "../lib/date/ExpiresInTo.ts";
+import { SchemaRefreshToken } from "@/schema/zod/RefreshTokenSchema.js";
+import { RefreshToken } from "@/services/RefreshTokenService.js";
+import { RepositoriesSystem } from "@/repositories/index.js";
+import { expiresInToMs } from "@/lib/date/ExpiresInTo.js";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { ErrorValidation } from "@/error/index.js";
 
 export class UpdateAuthRefresh {
   constructor(private refreshToken = new RefreshToken()){}

@@ -1,5 +1,5 @@
 import { CronExpressionParser } from "cron-parser";
-import { ErrorSystem } from "../../error";
+import { ErrorSystem } from "@/error/index.js";
 
 export function ConvertCron(cron: string){
   try {

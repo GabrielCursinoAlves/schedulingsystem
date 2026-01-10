@@ -1,5 +1,5 @@
-import {ApplicationError, NotFoundError, UnauthorizedError, ValidationError} from "./ApplicationError.ts";
-import {ZodValidationError} from "./zod/ZodError.ts";
+import {ApplicationError, NotFoundError, UnauthorizedError, ValidationError} from "./ApplicationError.js";
+import {ZodValidationError} from "./zod/ZodError.js";
 
 export const ErrorSystem = {
   "UnauthorizedError": UnauthorizedError,

@@ -1,7 +1,7 @@
-import { SchemaCreateSystemRouter } from "../schema/zod/CreateSchedulingSystemSchema.ts";
-import { JobCreation } from "../services/JobCreationService.ts";
+import { SchemaCreateSystemRouter } from "@/schema/zod/CreateSchedulingSystemSchema.js";
+import { JobCreation } from "@/services/JobCreationService.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ErrorValidation } from "../error/index.ts";
+import { ErrorValidation } from "@/error/index.js";
 
 export class CreateSchedulingSystem {
   constructor(private SchedulingTransaction = new JobCreation()){}

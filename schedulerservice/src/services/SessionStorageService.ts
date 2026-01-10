@@ -1,15 +1,15 @@
-import { SessionParams, SessionReturns } from "../interface/SessionParams.ts";
-import { JWTProvider } from "../lib/middleware/JWTProvider.ts";
+import { SessionParams, SessionReturns } from "@/interface/SessionParams.js";
+import { JWTProvider } from "@/lib/middleware/JWTProvider.js";
 import { scryptSync, timingSafeEqual } from "node:crypto";
-import { prisma } from "../config/prisma/Connection.ts";
-import { ErrorSystem } from "../error/index.ts";
+import { prisma } from "@/config/prisma/Connection.js";
+import { ErrorSystem } from "@/error/index.js";
 
 export class SessionStorage {
   verify = async(data: SessionParams): Promise<SessionReturns> => {
     const { email, password } = data;
 
     const user = await prisma.user.findUnique({ where:{ email }, 
-      select:{id: true, password: true} 
+      select:{ id: true, password: true } 
     });
     
     if(!user) throw new ErrorSystem.UnauthorizedError("Email Invalid authentication credentials.");

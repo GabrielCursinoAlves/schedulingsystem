@@ -1,4 +1,4 @@
-import { ErrorSystem, ErrorValidation } from "./error/index.ts";
+import { ErrorSystem, ErrorValidation } from "./error/index.js";
 import {FastifyRequest, FastifyReply} from "fastify";
 
 export const ErrorHandler = (

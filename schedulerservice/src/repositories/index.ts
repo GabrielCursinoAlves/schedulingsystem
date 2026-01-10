@@ -1,8 +1,8 @@
-import { CreateShedulingSystem } from "./CreateShedulingSystemRepositories.ts";
-import { CreateOutbox } from "./CreateOutboxRepositores.ts";
-import { CreateUser } from "./CreateUserRepositories.ts";
-import { CreateSession } from "./CreateSession.ts";
-import { CreateRefreshToken } from "./CreateRefreshTokenRepositories.ts";
+import { CreateShedulingSystem } from "./CreateShedulingSystemRepositories.js";
+import { CreateRefreshToken } from "./CreateRefreshTokenRepositories.js";
+import { CreateOutbox } from "./CreateOutboxRepositores.js";
+import { CreateUser } from "./CreateUserRepositories.js";
+import { CreateSession } from "./CreateSession.js";
 
 export const RepositoriesSystem = {
   CreateShedulingSystem,

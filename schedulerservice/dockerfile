@@ -1,0 +1,23 @@
+FROM node:24-alpine
+
+RUN apk add --no-cache curl
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY prisma ./prisma
+COPY src ./src
+COPY tsconfig.json ./
+
+RUN npx prisma generate
+
+RUN npm run build
+
+EXPOSE 3304
+
+CMD ["node", "dist/src/server.js"]
+
+HEALTHCHECK --interval=5s --timeout=10s --retries=5 CMD curl -f http://localhost:3304/health || exit 1
+

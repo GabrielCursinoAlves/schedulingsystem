@@ -1,6 +1,6 @@
-import { prisma } from "../config/prisma/Connection.ts";
-import { Session } from "../interface/SessionParams.ts";
-import { ErrorSystem } from "../error/index.ts";
+import { prisma } from "@/config/prisma/Connection.js";
+import { Session } from "@/interface/SessionParams.js";
+import { ErrorSystem } from "@/error/index.js";
 
 export class CreateSession {
   async execute(data: Session): Promise<void>{

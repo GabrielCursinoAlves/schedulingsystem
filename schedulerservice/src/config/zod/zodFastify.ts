@@ -1,6 +1,6 @@
 import { validatorCompiler, serializerCompiler, ZodTypeProvider } from "fastify-type-provider-zod"; 
-import type { ControllerZodInstance } from "../../types/zod/InstanceZodType.ts";
-import { ErrorHandler } from "../../errorHandler.ts";
+import type { ControllerZodInstance } from "@/types/zod/InstanceZodType.js";
+import { ErrorHandler } from "@/errorHandler.js";
 import fastify from "fastify";
 
 export const CreateZodFastify = (): ControllerZodInstance => {

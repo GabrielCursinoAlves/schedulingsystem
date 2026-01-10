@@ -1,10 +1,9 @@
-import { SessionRefreshReturns, SessionReturns } from "../interface/SessionParams.ts";
-import { JWTProvider } from "../lib/middleware/JWTProvider.ts";
-//import { JwtPayloadReturn } from "../types/jwt/JWTPayload.ts";
-import { RepositoriesSystem } from "../repositories/index.ts";
-import { prisma } from "../config/prisma/Connection.ts";
-import { SchemaTypeZod } from "../types/index.ts";
-import { ErrorSystem } from "../error/index.ts";
+import { SessionRefreshReturns, SessionReturns } from "@/interface/SessionParams.js";
+import { JWTProvider } from "@/lib/middleware/JWTProvider.js";
+import { RepositoriesSystem } from "@/repositories/index.js";
+import { prisma } from "@/config/prisma/Connection.js";
+import { SchemaTypeZod } from "@/types/index.js";
+import { ErrorSystem } from "@/error/index.js";
 import jwt from "jsonwebtoken";
 
 export class RefreshToken {

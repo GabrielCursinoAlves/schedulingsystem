@@ -1,5 +1,5 @@
-import type { SchemaTypeZod } from "../../types/index.ts";
-import { CronObject } from "./CronObject.ts";
+import type { SchemaTypeZod } from "@/types/index.js";
+import { CronObject } from "./CronObject.js";
 
 export function GenerateDataCron(data: SchemaTypeZod["SchemaSchedulingJobCronController"]){
   const {type, hour, minute} = data;
@@ -15,8 +15,11 @@ export function GenerateDataCron(data: SchemaTypeZod["SchemaSchedulingJobCronCon
       cronSchema[keyScheduling] = dataCron[keyScheduling] ?? "*";
 
       if(keyScheduling == "day_of_week"){
-        const dataWeek = dataCron[keyScheduling];
-        cronSchema[keyScheduling] = dayOfWeek[dataWeek as keyof typeof dataWeek];
+        const rawDay  = dataCron[keyScheduling];
+
+         if (typeof rawDay  === "string" && rawDay in dayOfWeek){
+          cronSchema[keyScheduling] = dayOfWeek[rawDay as keyof typeof dayOfWeek];
+         }
       }
     }
   };

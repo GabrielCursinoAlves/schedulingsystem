@@ -1,7 +1,7 @@
-import { CreateSchedulingSystem } from "./CreateSchedulingSystemController.ts";
-import { UpdateAuthRefresh } from "./UpdateAuthRefreshController.ts";
-import { CreateSession } from "./CreateSessionController.ts";
-import { CreateUser } from "./CreateUserController.ts";
+import { CreateSchedulingSystem } from "./CreateSchedulingSystemController.js";
+import { UpdateAuthRefresh } from "./UpdateAuthRefreshController.js";
+import { CreateSession } from "./CreateSessionController.js";
+import { CreateUser } from "./CreateUserController.js";
 
 export const ControllerSystem = {
   CreateSchedulingSystem,

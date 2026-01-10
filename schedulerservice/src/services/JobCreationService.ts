@@ -1,12 +1,12 @@
-import { PayloadPatternValidation } from "../lib/validation/PayloadPatternValidation.ts";
-import { CronPatternValidation } from "../lib/validation/CronPatternValidation.ts";
-import { ensureJsonObject } from "../lib/prisma/EnsureJsonObject.ts";
-import { SchedulingMetadata } from "../interface/ShedulingParams.ts";
-import { RepositoriesSystem } from "../repositories/index.ts";
-import { ConvertCron } from "../lib/cron/ConvertCron.ts";
-import { prisma } from "../config/prisma/Connection.ts";
-import { SchemaTypeZod } from "../types/index.ts";
-import { ErrorSystem } from "../error/index.ts";
+import { PayloadPatternValidation } from "@/lib/validation/PayloadPatternValidation.js";
+import { CronPatternValidation } from "@/lib/validation/CronPatternValidation.js";
+import { ensureJsonObject } from "@/lib/prisma/EnsureJsonObject.js";
+import { SchedulingMetadata } from "@/interface/ShedulingParams.js";
+import { RepositoriesSystem } from "@/repositories/index.js";
+import { ConvertCron } from "@/lib/cron/ConvertCron.js";
+import { prisma } from "@/config/prisma/Connection.js";
+import { SchemaTypeZod } from "@/types/index.js";
+import { ErrorSystem } from "@/error/index.js";
 
 export class JobCreation { 
   

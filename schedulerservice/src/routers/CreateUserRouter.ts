@@ -1,7 +1,7 @@
-import type {ControllerZodInstance } from "../types/zod/InstanceZodType.ts";
-import { SchemaCreateUserRouter } from "../schema/zod/CreateUserSchema.ts";
-import { AuthSession } from "../lib/middleware/AuthSession.ts";
-import { ControllerSystem } from "../controller/index.ts";
+import type {ControllerZodInstance } from "@/types/zod/InstanceZodType.js";
+import { SchemaCreateUserRouter } from "@/schema/zod/CreateUserSchema.js";
+import { AuthSession } from "@/lib/middleware/AuthSession.js";
+import { ControllerSystem } from "@/controller/index.js";
 
 export const CreateUserRouter = async(app: ControllerZodInstance) => {
 

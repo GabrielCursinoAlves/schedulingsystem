@@ -1,6 +1,6 @@
-import { Transaction } from "../types/prisma/TransactionType.ts";
-import { OutboxParams } from "../interface/OutboxParams.ts";
-import { ErrorSystem } from "../error/index.ts";
+import { Transaction } from "@/types/prisma/TransactionType.js";
+import { OutboxParams } from "@/interface/OutboxParams.js";
+import { ErrorSystem } from "@/error/index.js";
 
 export class CreateOutbox {
   async execute(data: OutboxParams, tsxprisma: Transaction): Promise<void> {

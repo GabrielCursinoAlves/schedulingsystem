@@ -1,9 +1,9 @@
-import { SchemaCreateSystemRouter } from "../schema/zod/CreateSchedulingSystemSchema.ts";
-import { SchemaRecurrencePattern } from "../schema/zod/SchedulingRecurrenceSchema.ts";
-import { SchemaSchedulingJobCron } from "../schema/zod/SchedulingJobSchema.ts";
-import { SchemaSendPayload } from "../schema/zod/SchedulingPayloadSchema.ts";
-import { SchemaRefreshToken } from "../schema/zod/RefreshTokenSchema.ts";
-import { WorkPayload } from "../schema/zod/WorkPayloadSchema.ts";
+import { SchemaCreateSystemRouter } from "@/schema/zod/CreateSchedulingSystemSchema.js";
+import { SchemaRecurrencePattern } from "@/schema/zod/SchedulingRecurrenceSchema.js";
+import { SchemaSchedulingJobCron } from "@/schema/zod/SchedulingJobSchema.js";
+import { SchemaSendPayload } from "@/schema/zod/SchedulingPayloadSchema.js";
+import { SchemaRefreshToken } from "@/schema/zod/RefreshTokenSchema.js";
+import { WorkPayload } from "@/schema/zod/WorkPayloadSchema.js";
 import { z } from "zod";
 
 export type SchemaTypeZod = {

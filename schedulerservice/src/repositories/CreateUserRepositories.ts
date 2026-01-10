@@ -1,8 +1,8 @@
-import { UserParams, UserReturns } from "../interface/UserParams.ts";
-import { prisma } from "../config/prisma/Connection.ts";
-import { Prisma } from "../generated/prisma/client.ts";
-import { scryptSync, randomBytes, Hash } from "node:crypto";
-import { ErrorSystem } from "../error/index.ts";
+import { UserParams, UserReturns } from "@/interface/UserParams.js";
+import { prisma } from "@/config/prisma/Connection.js";
+import { scryptSync, randomBytes } from "node:crypto";
+import { Prisma } from "@generated/prisma/client.js";
+import { ErrorSystem } from "@/error/index.js";
 
 export class CreateUser {
   async execute(data: UserParams): Promise<UserReturns> {

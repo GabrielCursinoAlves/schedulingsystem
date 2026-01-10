@@ -1,5 +1,5 @@
-import { SchemaRecurrencePattern, Schemas } from "./SchedulingRecurrenceSchema.ts";
-import { SchemaSendPayload } from "./SchedulingPayloadSchema.ts";
+import { SchemaRecurrencePattern, Schemas } from "./SchedulingRecurrenceSchema.js";
+import { SchemaSendPayload } from "./SchedulingPayloadSchema.js";
 import { z } from "zod";
 
 export const SchemaCreateSystemRouter = z.object({

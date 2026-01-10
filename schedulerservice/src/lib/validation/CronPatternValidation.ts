@@ -1,8 +1,8 @@
-import { SchemaSchedulingJobCron } from "../../schema/zod/SchedulingJobSchema.ts";
-import { GenerateDataCron } from "../cron/GenerateDataCron.ts";
-import { ErrorValidation } from "../../error/index.ts";
-import { SchemaTypeZod } from "../../types/index.ts";
-import { CronObject } from "../cron/CronObject.ts";
+import { SchemaSchedulingJobCron } from "@/schema/zod/SchedulingJobSchema.js";
+import { GenerateDataCron } from "@/lib/cron/GenerateDataCron.js";
+import { CronObject } from "@/lib/cron/CronObject.js";
+import { ErrorValidation } from "@/error/index.js";
+import { SchemaTypeZod } from "@/types/index.js";
 
 export function CronPatternValidation(data: SchemaTypeZod["SchemaCreateSchedulingRecurrence"]){
   if(data.type == "once") return Object.values(CronObject()).join(" ");

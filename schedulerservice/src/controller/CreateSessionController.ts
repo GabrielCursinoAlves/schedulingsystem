@@ -1,9 +1,9 @@
-import { SessionStorage } from "../services/SessionStorageService.ts";
-import { SchemaSession } from "../schema/zod/SessionSchema.ts";
-import { RepositoriesSystem } from "../repositories/index.ts";
-import { expiresInToMs } from "../lib/date/ExpiresInTo.ts";
+import { SessionStorage } from "@/services/SessionStorageService.js";
+import { SchemaSession } from "@/schema/zod/SessionSchema.js";
+import { RepositoriesSystem } from "@/repositories/index.js";
+import { expiresInToMs } from "@/lib/date/ExpiresInTo.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ErrorValidation } from "../error/index.ts";
+import { ErrorValidation } from "@/error/index.js";
 
 export class CreateSession {
   constructor(private Session = new SessionStorage()){}

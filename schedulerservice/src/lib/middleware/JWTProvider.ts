@@ -1,5 +1,5 @@
-import type { SignoOptionExpiresIn } from "../../types/jwt/SignOptionsType.ts";
-import { ErrorSystem } from "../../error/index.ts";
+import type { SignoOptionExpiresIn } from "@/types/jwt/SignOptionsType.ts";
+import { ErrorSystem } from "@/error/index.js";
 import jwt from "jsonwebtoken";
 
 export function JWTProvider(userId: string, expiresInValue: SignoOptionExpiresIn): string {

@@ -1,6 +1,6 @@
-import { ControllerZodInstance } from "../types/zod/InstanceZodType.ts";
-import { SchemaSession } from "../schema/zod/SessionSchema.ts";
-import { ControllerSystem } from "../controller/index.ts";
+import { ControllerZodInstance } from "@/types/zod/InstanceZodType.js";
+import { SchemaSession } from "@/schema/zod/SessionSchema.js";
+import { ControllerSystem } from "@/controller/index.js";
 
 export const createSessionRouter = async(app: ControllerZodInstance) => {
   

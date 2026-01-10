@@ -1,7 +1,7 @@
-import { SchemaCreateUserRouter } from "../schema/zod/CreateUserSchema.ts";
-import { RepositoriesSystem } from "../repositories/index.ts";
+import { SchemaCreateUserRouter } from "@/schema/zod/CreateUserSchema.js";
+import { RepositoriesSystem } from "@/repositories/index.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ErrorValidation } from "../error/index.ts";
+import { ErrorValidation } from "@/error/index.js";
 
 export class CreateUser {
   constructor(private StorageUserServices = new RepositoriesSystem.CreateUser()){}

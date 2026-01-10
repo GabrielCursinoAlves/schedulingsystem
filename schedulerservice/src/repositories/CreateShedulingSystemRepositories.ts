@@ -1,8 +1,8 @@
-import { SchedulingParams, ShedulingReturns } from "../interface/ShedulingParams.ts";
-import { cronPatternRecurrence } from "../lib/cron/cronPatternRecurrence.ts";
-import { Transaction } from "../types/prisma/TransactionType.ts";
-import { Prisma } from "../generated/prisma/client.ts";
-import { ErrorSystem } from "../error/index.ts";
+import { SchedulingParams, ShedulingReturns } from "@/interface/ShedulingParams.js";
+import { cronPatternRecurrence } from "@/lib/cron/CronPatternRecurrence.js";
+import { Transaction } from "@/types/prisma/TransactionType.js";
+import { Prisma } from "@generated/prisma/client.js";
+import { ErrorSystem } from "@/error/index.js";
 
 export class CreateShedulingSystem {
   execute = async(data: SchedulingParams, tsxprisma: Transaction): Promise<ShedulingReturns> => {

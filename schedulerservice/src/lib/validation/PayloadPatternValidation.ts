@@ -1,7 +1,7 @@
-import { SchemaSendPayload } from "../../schema/zod/SchedulingPayloadSchema.ts";
-import { Prisma } from "../../generated/prisma/client.ts";
-import { ErrorValidation } from "../../error/index.ts";
-import { SchemaTypeZod } from "../../types";
+import { SchemaSendPayload } from "@/schema/zod/SchedulingPayloadSchema.js";
+import { Prisma } from "@generated/prisma/client.js";
+import { ErrorValidation } from "@/error/index.js";
+import { SchemaTypeZod } from "@/types/index.js";
 
 export function PayloadPatternValidation(data: SchemaTypeZod["SchemaCreateSchedulingPayload"]): Prisma.InputJsonValue{
   const {type, message} = data;

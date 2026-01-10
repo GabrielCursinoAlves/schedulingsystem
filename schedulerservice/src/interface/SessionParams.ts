@@ -1,4 +1,4 @@
-import type { BaseUser } from "./UserParams.ts";
+import type { BaseUser } from "./UserParams.js";
 
 export interface BaseSession {
   user_id: string,
