@@ -1,11 +1,11 @@
-import { scryptSync, randomBytes, timingSafeEqual } from "node:crypto";
+import { SessionParams, SessionReturns } from "../interface/SessionParams.ts";
 import { JWTProvider } from "../lib/middleware/JWTProvider.ts";
-import { SessionParams } from "../interface/SessionParams.ts";
+import { scryptSync, timingSafeEqual } from "node:crypto";
 import { prisma } from "../config/prisma/Connection.ts";
 import { ErrorSystem } from "../error/index.ts";
 
 export class SessionStorage {
-  verify = async(data: SessionParams) => {
+  verify = async(data: SessionParams): Promise<SessionReturns> => {
     const { email, password } = data;
 
     const user = await prisma.user.findUnique({ 
@@ -13,23 +13,24 @@ export class SessionStorage {
       select:{ id: true, password: true } 
     });
     
-    if(!user){
-      throw new ErrorSystem.UnauthorizedError("Email Invalid authentication credentials.");
-    }
+    if(!user) throw new ErrorSystem.UnauthorizedError("Email Invalid authentication credentials.");
 
     const [salt, hash] = user.password.split("-");
    
     const hashBuffer = Buffer.from(hash, "hex");
     const verifyHash = scryptSync(password, salt, 64);
 
-    if(!timingSafeEqual(hashBuffer, verifyHash)){
-      throw new ErrorSystem.UnauthorizedError("Password Invalid authentication credentials.")
-    }
+    if(!timingSafeEqual(hashBuffer, verifyHash)) throw new ErrorSystem.UnauthorizedError("Password Invalid authentication credentials.")
 
-    const token = JWTProvider(user.id, "1h");
+    const acessToken = JWTProvider(user.id, "1h");
+    const refreshToken = JWTProvider(user.id, "2h");
+
     return {
       message: "User logged in success",
-      accessToken: token
+      user_id: user.id,
+      expiresAt: "2h",
+      refreshToken,
+      acessToken
     }
     
   }

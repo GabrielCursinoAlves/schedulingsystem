@@ -7,7 +7,7 @@ export interface BaseUser {
 
 export interface UserParams extends BaseUser {}
 
-export interface UserReturns extends BaseUser{
+export interface UserReturns extends BaseUser {
   id: string,
   createdAt: Date
 }

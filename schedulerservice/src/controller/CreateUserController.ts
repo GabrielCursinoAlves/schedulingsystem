@@ -8,9 +8,7 @@ export class CreateUser {
   handle = async (req: FastifyRequest, reply: FastifyReply) => {
     const result = SchemaCreateUserRouter.safeParse(req.body);
     
-    if(!result.success){
-      throw new ErrorValidation.ZodValidationError(result.error);
-    }
+    if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
 
     if(result.data){
       const { username, phone, email, password } = result.data;

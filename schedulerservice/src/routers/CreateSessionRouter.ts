@@ -4,6 +4,6 @@ import { ControllerSystem } from "../controller/index.ts";
 
 export const createSessionRouter = async(app: ControllerZodInstance) => {
   
-  app.post("/login", { schema: {body: SchemaSession} }, new ControllerSystem.CreateSessionController().handle);
+  app.post("/login", { schema: {body: SchemaSession} }, new ControllerSystem.CreateSession().handle);
   
 };

@@ -3,7 +3,6 @@ import { SchemaSendPayload } from "./SchedulingPayloadSchema.ts";
 import { z } from "zod";
 
 export const SchemaCreateSystemRouter = z.object({
-  user_id: z.uuid(),
   payload: SchemaSendPayload,
   run_at:  z.coerce.date(),
   recurrence_pattern: SchemaRecurrencePattern.superRefine((data, ctx) => {
