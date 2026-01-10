@@ -36,6 +36,7 @@ model Outbox {
   event_type     String
   payload        Json
   status         String    @default("pending")
+  scheduledAt    DateTime  @default(now()) @db.Timestamptz()
   error_reason   String?
   processed_at   DateTime?
   created_at     DateTime  @default(now())

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Outbox" ALTER COLUMN "scheduledAt" SET DATA TYPE TIMESTAMPTZ;

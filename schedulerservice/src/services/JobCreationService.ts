@@ -3,6 +3,7 @@ import { CronPatternValidation } from "../lib/validation/CronPatternValidation.t
 import { ensureJsonObject } from "../lib/prisma/EnsureJsonObject.ts";
 import { SchedulingMetadata } from "../interface/ShedulingParams.ts";
 import { RepositoriesSystem } from "../repositories/index.ts";
+import { ConvertCron } from "../lib/cron/ConvertCron.ts";
 import { prisma } from "../config/prisma/Connection.ts";
 import { SchemaTypeZod } from "../types/index.ts";
 import { ErrorSystem } from "../error/index.ts";
@@ -14,7 +15,9 @@ export class JobCreation {
 
       let payloadPattern = PayloadPatternValidation(payload);
       const cronPatternRecurrence = CronPatternValidation(recurrence_pattern);
-
+     
+      const scheduledAt = ConvertCron(cronPatternRecurrence) ?? new Date();
+      
       const dataShedulingSystem = {
         userId: user_id,
         payload: payloadPattern,
@@ -39,10 +42,11 @@ export class JobCreation {
         const dataOutbox = { 
           payload,
           event_type,
+          scheduledAt,
           scheduleId: id, 
           aggregate_type,
         };
-       
+      
         await new RepositoriesSystem.CreateOutbox().execute(dataOutbox, tx);
        
       });
