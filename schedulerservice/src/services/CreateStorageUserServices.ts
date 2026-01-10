@@ -34,7 +34,7 @@ export class CreateStorageUser{
         throw new ErrorSystem.PrismaUniqueViolation("Invalid field or data sent to database.");
       }
       
-      throw new ErrorSystem.AppError("Unexpected database error.");
+      throw new ErrorSystem.ApplicationError("Unexpected database error.");
     }
 
   }

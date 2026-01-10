@@ -4,6 +4,6 @@ import {FastifyInstance} from "fastify";
 
 export const CreateSchedulingRouter = async(app:FastifyInstance) => {
 
-  app.post("/CreateSchedulingSystem", SchemaCreateSystem, new ControllerSystem.CreateSchedulingSystem().handle);
+  app.post("/CreateSchedulingSystem", {schema: {body: SchemaCreateSystem}}, new ControllerSystem.CreateSchedulingSystem().handle);
 
 }
