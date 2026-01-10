@@ -1,7 +1,5 @@
 import {FastifyRequest, FastifyReply} from "fastify";
-import { ErrorSystem } from "./error/index.ts";
-import { ZodValidationError } from "./error/zod/ZodError.ts";
-import { error } from "console";
+import { ErrorSystem, ErrorValidation } from "./error/index.ts";
 
 export const ErrorHandler = (
   error: Error, 
@@ -17,7 +15,7 @@ export const ErrorHandler = (
     });
   };
 
-  if(error instanceof ErrorSystem.ZodValidationError){
+  if(error instanceof ErrorValidation.ZodValidationError){
     
      reply.status(error.statusCode).send({
       error: error.name,
@@ -28,10 +26,10 @@ export const ErrorHandler = (
   }
 
   const ErrorClass = ErrorSystem[error.name as keyof typeof ErrorSystem]; 
- 
-  if (error instanceof ErrorClass && !(error instanceof ZodValidationError)) {
+  
+  if (error instanceof ErrorClass) {
     
-    const prismaInstance = new ErrorClass(error.message as any);
+    const prismaInstance = new ErrorClass(error.message);
      return reply.status(prismaInstance.statusCode).send({
       error: prismaInstance.name,
       statusCode: prismaInstance.statusCode,

@@ -5,6 +5,9 @@ import {ZodValidationError} from "./zod/ZodError.ts";
 export const ErrorSystem = {
   "PrismaUniqueViolation": PrismaUniqueViolationError,
   "ApplicationError": ApplicationError,
-  "NotFound": NotFoundError,
+  "NotFound": NotFoundError
+};
+
+export const ErrorValidation = {
   "ZodValidationError": ZodValidationError
 };

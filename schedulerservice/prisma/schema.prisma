@@ -17,11 +17,12 @@ model User {
 }
 
 model ScheduledJob {
-  id                 String   @id
+  id                 String   @id @default(uuid())
   userId             String
+  payload            Json
   AuthorJob          User     @relation(fields: [userId], references: [id])
   run_at             DateTime
-  recurrence_pattern Json
+  recurrence_pattern String
   is_recurring       Boolean
   created_at         DateTime @default(now())
 }
