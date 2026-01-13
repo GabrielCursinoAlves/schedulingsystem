@@ -18,10 +18,17 @@ services:
       - ./docker/init-db:/docker-entrypoint-initdb.d
       - scheduler_pg_data:/var/lib/postgresql/data
   scheduler-service:
-    build: .
+    build:
+      context: .
+      args:
+        DATABASE_URL: ${DATABASE_URL}
     ports:
       - "3304:3304"
     restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
     depends_on:
       pg:
         condition: service_healthy

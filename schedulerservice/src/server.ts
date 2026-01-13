@@ -7,9 +7,9 @@ import { AuthRefresh } from "@/routers/AuthRefreshRouter.js";
 
 const app = CreateZodFastify();
 
+app.register(CreateHealthcheck);
 app.register(CreateSchedulingRouter);
 app.register(createSessionRouter);
-app.register(CreateHealthcheck);
 app.register(CreateUserRouter);
 app.register(AuthRefresh);
 

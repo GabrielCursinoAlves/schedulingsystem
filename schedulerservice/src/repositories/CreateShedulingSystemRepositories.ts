@@ -1,5 +1,5 @@
 import { SchedulingParams, ShedulingReturns } from "@/interface/ShedulingParams.js";
-import { cronPatternRecurrence } from "@/lib/cron/CronPatternRecurrence.js";
+import { cronPatternRecurrence } from "@/lib/cron/cronPatternRecurrence.js";
 import { Transaction } from "@/types/prisma/TransactionType.js";
 import { Prisma } from "@generated/prisma/client.js";
 import { ErrorSystem } from "@/error/index.js";
