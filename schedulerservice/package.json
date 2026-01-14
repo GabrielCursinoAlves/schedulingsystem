@@ -4,7 +4,7 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx --env-file=.env --watch --no-warnings src/server.ts",
+    "dev": "npx tsx --env-file=.env.local --watch --no-warnings src/server.ts",
     "pm2:start": "npx pm2 start ecosystem.config.js",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",

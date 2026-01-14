@@ -1,5 +1,5 @@
 .env.production
 node_modules
+.env.local
 generated
-.env
 dist
