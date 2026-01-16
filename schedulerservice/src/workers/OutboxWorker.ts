@@ -4,8 +4,7 @@ import { ErrorValidation } from "@/error/index.js";
 import { SchemaTypeZod } from "@/types/index.js";
 
 async function WorkerScheduled(){
-  
-  while (true) {
+
     try {
       const messages = await prisma.outbox.findMany({
         where: { AND: [{ status: "pending" }, { scheduledAt: { gte: new Date() } }] }
@@ -19,11 +18,10 @@ async function WorkerScheduled(){
         
         workData.push(result.data);
       };
-
+  
     } catch (error) {
       console.log(`Database query failed: ${error}`);
     }
-  } 
 
 }
 

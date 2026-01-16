@@ -15,7 +15,6 @@ export async function AuthSession(req: FastifyRequest, reply: FastifyReply){
 
   try {
     const payload = jwt.verify(token, secret);
-    console.log(payload);
     req.user = payload;
 
   } catch (error) {

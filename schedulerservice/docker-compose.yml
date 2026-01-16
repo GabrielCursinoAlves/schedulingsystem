@@ -1,15 +1,11 @@
 services:
   pg:
     image: postgres:16-alpine
-    restart: always
     env_file:
       - .env.local
+    restart: always
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_DB}"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
@@ -20,17 +16,13 @@ services:
       - ./docker/init-db:/docker-entrypoint-initdb.d
       - scheduler_pg_data:/var/lib/postgresql/data
   scheduler-service:
+    env_file:
+      - .env.production
     build:
       context: .
-      args:
-        DATABASE_URL: ${DATABASE_URL}
     ports:
       - "3304:3304"
     restart: unless-stopped
-    env_file:
-      - .env.production
-    environment:
-      NODE_ENV: production
     depends_on:
       pg:
         condition: service_healthy
