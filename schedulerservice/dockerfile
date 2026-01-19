@@ -11,10 +11,19 @@ COPY prisma ./prisma
 COPY src ./src
 COPY tsconfig.json ./
 
+RUN npx prisma generate
+
 RUN npm run build
+
+COPY prisma.config.ts ./
+COPY environment ./environment
+
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 
 EXPOSE 3304
 
+ENTRYPOINT [ "./docker-entrypoint.sh" ]
 CMD ["npm", "run", "start-production"]
 
 HEALTHCHECK --interval=5s --timeout=3s --retries=5 CMD sh -c "curl -f http://localhost:3304/health/live && curl -f http://localhost:3304/health/ready || exit 1"
