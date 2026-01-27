@@ -11,7 +11,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 5
-      start_period: 30s
+      start_period: 2s
     volumes:
       - ./docker/init-db:/docker-entrypoint-initdb.d
       - scheduler_pg_data:/var/lib/postgresql/data
@@ -26,7 +26,6 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-
 
 volumes:
   scheduler_pg_data:

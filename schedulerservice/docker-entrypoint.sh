@@ -2,9 +2,9 @@
 set -e
 
 until nc -z pg 5432; do 
-  sleep
+  sleep 2
 done
 
-npx prisma migrate deploy
+node ./node_modules/prisma/build/index.js migrate deploy
 
 exec "$@"

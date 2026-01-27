@@ -24,6 +24,6 @@ RUN chmod +x ./docker-entrypoint.sh
 EXPOSE 3304
 
 ENTRYPOINT [ "./docker-entrypoint.sh" ]
-CMD ["npm", "run", "start-production"]
+CMD ["node", "dist/src/server.js"]
 
 HEALTHCHECK --interval=5s --timeout=3s --retries=5 CMD sh -c "curl -f http://localhost:3304/health/live && curl -f http://localhost:3304/health/ready || exit 1"
