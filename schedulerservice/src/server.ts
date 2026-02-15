@@ -5,6 +5,7 @@ import { CreateHealthcheck } from "@/routers/HealthcheckRouter.js";
 import { CreateUserRouter } from "@/routers/CreateUserRouter.js";
 import { CreateZodFastify } from "@/config/zod/zodFastify.js";
 import { AuthRefresh } from "@/routers/AuthRefreshRouter.js";
+import { Env } from "@/environment/env.js";
 
 const app = CreateZodFastify();
 
@@ -20,8 +21,10 @@ const shutdown = async(signal: string) => {
   await app.close();
 }
 
-const port = Number(process.env.PORT) || 3304;
-app.listen({port}).then(() => {
+const port = Env.PORT;
+const host = Env.HOST;
+
+app.listen({port, host}).then(() => {
   console.log("Server is running on port 3304"); 
 });
 

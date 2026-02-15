@@ -16,7 +16,6 @@ RUN npx prisma generate
 RUN npm run build
 
 COPY prisma.config.ts ./
-COPY environment ./environment
 
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh

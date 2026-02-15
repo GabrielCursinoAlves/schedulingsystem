@@ -1,9 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorSystem } from "@/error/index.js";
+import { Env } from "@/environment/env.js";
 import jwt from "jsonwebtoken";
 
 export async function AuthSession(req: FastifyRequest, reply: FastifyReply){
-  const secret =  process.env.SECRET_KEY;
+  const secret =  Env.SECRET_KEY;
+ 
   if(!secret) throw new ErrorSystem.ApplicationError("SECRET KEY was not defined.");
   
   const authHeader = req.headers.authorization;

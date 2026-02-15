@@ -9,15 +9,15 @@ export class UpdateAuthRefresh {
   constructor(private refreshToken = new RefreshToken()){}
   handle = async(req: FastifyRequest, reply: FastifyReply) => {
     const result = SchemaRefreshToken.safeParse(req.body);
-
+   
     if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
-
+   
     const { refreshToken } = result.data;
-
+   
     this.refreshToken.verify({ refreshToken });
-
+   
     const tokenData = await this.refreshToken.generate({refreshToken});
-
+   
     const expiresAtToken = new Date(Date.now() + expiresInToMs(tokenData.expiresAt));
 
     const sessionData = {

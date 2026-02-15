@@ -4,11 +4,12 @@ import { RepositoriesSystem } from "@/repositories/index.js";
 import { prisma } from "@/config/prisma/Connection.js";
 import { SchemaTypeZod } from "@/types/index.js";
 import { ErrorSystem } from "@/error/index.js";
+import { Env } from "@/environment/env.js";
 import jwt from "jsonwebtoken";
 
 export class RefreshToken {
   verify = (data: SchemaTypeZod["SchemaRefreshToken"]): void => {
-    const secret =  process.env.SECRET_KEY;
+    const secret =  Env.SECRET_KEY;
     if(!secret) throw new ErrorSystem.ApplicationError("SECRET KEY was not defined.");
 
     const { refreshToken } = data;
@@ -47,15 +48,22 @@ export class RefreshToken {
   generate = async(data: SchemaTypeZod["SchemaRefreshToken"]): Promise<SessionReturns> => {
     const { refreshToken } = data;
 
-    const session = await this.validateAndGetSession(refreshToken);
+    const acessTokenExpires = Env.ACESS_TOKEN_EXPIRES;
+    if(!acessTokenExpires) 
+      throw new ErrorSystem.ApplicationError("ACESS_TOKEN_EXPIRES was not defined.");
 
+    const refreshTokenExpires = Env.REFRESH_TOKEN_EXPIRES;
+    if(!refreshTokenExpires) 
+      throw new ErrorSystem.ApplicationError("REFRESH_TOKEN_EXPIRES was not defined.");
+    
+    const session = await this.validateAndGetSession(refreshToken);
     await new RepositoriesSystem.CreateRefreshToken().delete(session.acessToken);
-   
-    const acessNewToken = JWTProvider(session.user_id, "1h");
-    const refreshNewToken = JWTProvider(session.user_id, "7d");
+    
+    const acessNewToken = JWTProvider(session.user_id, acessTokenExpires);
+    const refreshNewToken = JWTProvider(session.user_id, refreshTokenExpires);
     
     return { 
-      expiresAt: "7d",
+      expiresAt: refreshTokenExpires,
       user_id: session.user_id,
       acessToken: acessNewToken,
       refreshToken: refreshNewToken

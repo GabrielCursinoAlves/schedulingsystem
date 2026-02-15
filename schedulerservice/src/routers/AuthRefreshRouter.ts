@@ -2,6 +2,7 @@ import type { ControllerZodInstance } from "@/types/zod/InstanceZodType.js";
 import { SchemaRefreshToken } from "@/schema/zod/RefreshTokenSchema.js";
 import { AuthSession } from "@/lib/middleware/AuthSession.js";
 import { ControllerSystem } from "@/controller/index.js";
+import { FastifyRequest, FastifyReply } from "fastify";
 
 export const AuthRefresh = async(app: ControllerZodInstance) => {
 
