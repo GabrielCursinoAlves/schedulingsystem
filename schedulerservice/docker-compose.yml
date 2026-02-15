@@ -17,7 +17,6 @@ services:
       - scheduler_pg_data:/var/lib/postgresql/data
   scheduler-service:
     env_file:
-      - .env
       - .env.local
     build:
       context: .
