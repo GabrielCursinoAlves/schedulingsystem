@@ -3,7 +3,6 @@ import "../config.js";
 
 export function required(name: string): string{
   const enValue = process.env[name];
-  
   if(!enValue){
     throw new Error(`missing field ${enValue}`);
   }

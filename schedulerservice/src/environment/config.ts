@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 
-const endFile = process.env.NODE_ENV == "production" ? ".env.production": ".env.local";
-
-config({ path: [ ".env", endFile ]});
+if(!process.env.DOCKER) {
+  const endFile = ".env.local";
+  config({ path: [ ".env", endFile ]});
+};

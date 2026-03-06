@@ -15,9 +15,28 @@ services:
     volumes:
       - ./docker/init-db:/docker-entrypoint-initdb.d
       - scheduler_pg_data:/var/lib/postgresql/data
-  scheduler-service:
+  rabbitmq:
+    image: rabbitmq:3-management
     env_file:
       - .env.local
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  scheduler-service:
+    env_file:
+      - .env
+      - .env.local
+    environment:
+      DOCKER: "true"
     build:
       context: .
     ports:
@@ -26,6 +45,9 @@ services:
     depends_on:
       pg:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
   scheduler_pg_data:
+  rabbitmq_data:

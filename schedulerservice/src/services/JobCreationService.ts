@@ -9,7 +9,6 @@ import { SchemaTypeZod } from "@/types/index.js";
 import { ErrorSystem } from "@/error/index.js";
 
 export class JobCreation { 
-  
   execute = async(user_id: string, data: SchemaTypeZod["SchemaCreateSystemService"]): Promise<void> => {
     try {
       const { payload, run_at, recurrence_pattern } = data;

@@ -1,7 +1,7 @@
 import { CronExpressionParser } from "cron-parser";
 import { ErrorSystem } from "@/error/index.js";
 
-export function ConvertCron(cron: string){
+export function ConvertCron(cron: string) {
   try {
     const dataCron = CronExpressionParser.parse(cron, {
       tz: "America/Sao_Paulo"
