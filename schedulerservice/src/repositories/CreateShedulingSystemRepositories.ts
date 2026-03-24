@@ -32,8 +32,8 @@ export class CreateShedulingSystem {
 
       const dataAdditional = {
         phone: user.phone,
-        aggregate_type: "ScheduledJob",
-        event_type: "JobScheduled"
+        aggregate_type: "job",
+        event_type: "job.scheduled"
       };
      
       return {

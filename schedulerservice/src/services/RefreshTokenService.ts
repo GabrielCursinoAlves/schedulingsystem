@@ -1,10 +1,10 @@
 import { SessionRefreshReturns, SessionReturns } from "@/interface/SessionParams.js";
+import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { JWTProvider } from "@/lib/middleware/JWTProvider.js";
 import { RepositoriesSystem } from "@/repositories/index.js";
-import { prisma } from "@/config/prisma/Connection.js";
+import { Env } from "@/config/environment/env.js";
 import { SchemaTypeZod } from "@/types/index.js";
 import { ErrorSystem } from "@/error/index.js";
-import { Env } from "@/environment/env.js";
 import jwt from "jsonwebtoken";
 
 export class RefreshToken {

@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { Env } from "@/config/environment/env.js";
 import { ErrorSystem } from "@/error/index.js";
-import { Env } from "@/environment/env.js";
 import jwt from "jsonwebtoken";
 
 export async function AuthSession(req: FastifyRequest, reply: FastifyReply){

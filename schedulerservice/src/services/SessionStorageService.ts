@@ -1,9 +1,9 @@
 import { SessionParams, SessionReturns } from "@/interface/SessionParams.js";
+import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { JWTProvider } from "@/lib/middleware/JWTProvider.js";
 import { scryptSync, timingSafeEqual } from "node:crypto";
-import { prisma } from "@/config/prisma/Connection.js";
+import { Env } from "@/config/environment/env.js";
 import { ErrorSystem } from "@/error/index.js";
-import { Env } from "@/environment/env.js";
 
 export class SessionStorage {
   verify = async(data: SessionParams): Promise<SessionReturns> => {

@@ -1,4 +1,4 @@
-import { prisma } from "@/config/prisma/Connection.js";
+import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { Session } from "@/interface/SessionParams.js";
 import { ErrorSystem } from "@/error/index.js";
 

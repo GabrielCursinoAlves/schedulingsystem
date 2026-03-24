@@ -5,6 +5,7 @@ export const Env = {
   HOST: required("HOST"),
   SECRET_KEY: required("SECRET_KEY"),
   DATABASE_URL: required("DATABASE_URL"),
+  RABBITMQ_URL: required("RABBITMQ_URL"),
   ACESS_TOKEN_EXPIRES: toExpires("ACESS_TOKEN_EXPIRES"),
   REFRESH_TOKEN_EXPIRES: toExpires("REFRESH_TOKEN_EXPIRES")
 };

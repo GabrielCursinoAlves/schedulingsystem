@@ -1,4 +1,4 @@
-import { prisma } from "@/config/prisma/Connection.js";
+import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 
 export class CreateRefreshToken {
   delete = async(token: string): Promise<void> => {

@@ -1,10 +1,10 @@
 import { PayloadPatternValidation } from "@/lib/validation/PayloadPatternValidation.js";
 import { CronPatternValidation } from "@/lib/validation/CronPatternValidation.js";
+import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { ensureJsonObject } from "@/lib/prisma/EnsureJsonObject.js";
 import { SchedulingMetadata } from "@/interface/ShedulingParams.js";
 import { RepositoriesSystem } from "@/repositories/index.js";
 import { ConvertCron } from "@/lib/cron/ConvertCron.js";
-import { prisma } from "@/config/prisma/Connection.js";
 import { SchemaTypeZod } from "@/types/index.js";
 import { ErrorSystem } from "@/error/index.js";
 

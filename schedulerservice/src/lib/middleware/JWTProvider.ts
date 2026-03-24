@@ -1,6 +1,6 @@
 import type { SignoOptionExpiresIn } from "@/types/jwt/SignOptionsType.ts";
+import { Env } from "@/config/environment/env.js";
 import { ErrorSystem } from "@/error/index.js";
-import { Env } from "@/environment/env.js";
 import jwt from "jsonwebtoken";
 
 export function JWTProvider(userId: string, expiresInValue: SignoOptionExpiresIn): string {

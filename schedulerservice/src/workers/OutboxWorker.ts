@@ -1,5 +1,5 @@
+import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { WorkPayload } from "@/schema/zod/WorkPayloadSchema.js";
-import { prisma } from "@/config/prisma/Connection.js";
 import { ErrorValidation } from "@/error/index.js";
 import { SchemaTypeZod } from "@/types/index.js";
 
