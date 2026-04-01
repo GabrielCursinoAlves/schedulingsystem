@@ -6,5 +6,7 @@ export type BindQueueParams = {
 
 export type QueueParams = {
   queueName: string,
-  deadExchange?: string
+  deadExchange?: string,
+  deadRoutingKey?: string,
+  timeTtl?: number
 }

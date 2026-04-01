@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "pm2:start-development": "npx pm2 start ecosystem.config.cjs --env development",
-    "pm2:start-production": "npx pm2 start ecosystem.config.cjs --env production",
     "dev": "npx tsx --watch --no-warnings src/server.ts",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",

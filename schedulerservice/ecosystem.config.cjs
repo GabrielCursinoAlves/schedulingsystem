@@ -8,10 +8,7 @@ module.exports = {
       args: ['--', path.join(__dirname, 'src', 'workers', 'OutboxWorker.ts')],
       node_args: "-r dotenv/config",
       env_development: {
-        DOTENV_CONFIG_PATH: ".env.local"
-      },
-      env_production: {
-        DOTENV_CONFIG_PATH: ".env.production"
+        DOTENV_CONFIG_PATH: ".env"
       },
       interpreter: 'node',
       exec_mode: "fork"
