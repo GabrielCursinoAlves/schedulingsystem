@@ -30,7 +30,7 @@ export class RabbitMQTopology {
       queueName, 
       exchangeName, 
       routingKey
-    );
+    ); 
   }
 
   async setupMessagingTopology(channel: Channel) { 
