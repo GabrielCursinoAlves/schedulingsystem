@@ -7,7 +7,7 @@ export class RabbitMQPublisher {
   constructor(private readonly channel: Channel) {}
   async publishCreateJob(data: SchemaTypeZod["SchemaWorkPayload"]) {
     const message = Buffer.from(JSON.stringify(data));
-   
+    
     const publishConfirm = this.channel.sendToQueue(
       configRabbitMQ.queue.delay,
       message, {
