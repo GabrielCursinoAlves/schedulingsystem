@@ -13,7 +13,7 @@ export class RabbitMQConnection {
     return RabbitMQConnection.instance;
   }
 
-  async connect(): Promise<ChannelModel> {
+  async connect(): Promise<ChannelModel> { 
     const rabbitmq_url = Env.RABBITMQ_URL;
     
     if(!rabbitmq_url) throw new ErrorSystem.ApplicationError("RABBITMQ_URL was not defined.");
