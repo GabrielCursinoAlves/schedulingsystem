@@ -6,7 +6,7 @@ export const gracefulShutdown = (app: ControllerZodInstance, rabbitMQ: RabbitMQC
   let isShuttingDown = false;
   
   const shutdown = async(signal: string) => {
-    if(isShuttingDown) return;
+    if(isShuttingDown) return; 
     isShuttingDown = true;
 
     const timeout = setTimeout(() => {
