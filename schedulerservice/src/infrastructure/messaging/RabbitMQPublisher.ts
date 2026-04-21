@@ -1,7 +1,7 @@
 import { configRabbitMQ } from "@/infrastructure/messaging/RabbitMQConfig.js";
 import { SchemaTypeZod } from "@/types/index.js";
 import { ErrorSystem } from "@/error/index.js";
-import { Channel } from "amqplib";
+import { Channel } from "amqplib"; 
 
 export class RabbitMQPublisher {
   constructor(private readonly channel: Channel) {}
