@@ -7,14 +7,14 @@ import { AuthRefresh } from "@/routers/AuthRefreshRouter.js";
 import { bootstrap } from "./lifecycle/bootstrap.js";
 import { Env } from "@/config/environment/env.js";
 
-const app = CreateZodFastify();
+const app = CreateZodFastify(); 
 await bootstrap(app);
 
 app.register(CreateSchedulingRouter);
 app.register(createSessionRouter);
 app.register(CreateHealthcheck);
 app.register(CreateUserRouter);
-app.register(AuthRefresh);
+app.register(AuthRefresh); 
 
 const port = Env.PORT;
 const host = Env.HOST;

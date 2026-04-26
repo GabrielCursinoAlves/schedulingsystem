@@ -3,7 +3,6 @@ import { Connection, Channel } from "amqplib";
 import { ErrorSystem } from "@/error/index.js";
 import { Env } from "@/config/environment/env.js";
 import { RabbitMQTopology } from "./RabbitMQTopology.js";
-import { resolve } from "node:path";
 
 export class RabbitMQConnection {
   constructor(private rabbitMQTopology = new RabbitMQTopology){}
