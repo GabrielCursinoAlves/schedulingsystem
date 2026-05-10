@@ -15,14 +15,16 @@ services:
     volumes:
       - ./docker/init-db:/docker-entrypoint-initdb.d
       - scheduler_pg_data:/var/lib/postgresql/data
+    networks:
+      app-network:
   rabbitmq:
     image: rabbitmq:3-management
     env_file:
       - .env.local
-    restart: no
     ports:
       - "5672:5672"
       - "15672:15672"
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "check_running"]
       interval: 10s
@@ -31,7 +33,9 @@ services:
       start_period: 40s
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-  scheduler-service:
+    networks:
+      app-network:
+  scheduler:
     env_file:
       - .env
       - .env.local
@@ -47,7 +51,34 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-
+    networks:
+      app-network:
+   
+  worker:
+    env_file:
+      - .env
+      - .env.local
+    build:
+      context: .
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    working_dir: /app
+    command: sh -c "npm run build && npm run worker"
+    depends_on:
+      pg:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      app-network:
+    volumes:
+      - ./:/app           
+      - /app/dist  
+    
 volumes:
   scheduler_pg_data:
   rabbitmq_data:
+networks:
+  app-network:
+    driver: bridge
