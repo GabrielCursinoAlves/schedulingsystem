@@ -7,10 +7,10 @@ export const SchemaCreateSystemRouter = z.object({
   run_at:  z.coerce.date(),
   recurrence_pattern: SchemaRecurrencePattern.superRefine((data, ctx) => {
     const AllTypeSchemas = Schemas[data.type]; 
-
+    
     if(AllTypeSchemas instanceof z.ZodObject){
      
-     const allowedKeys = Object.keys(AllTypeSchemas.shape);
+      const allowedKeys = Object.keys(AllTypeSchemas.shape);
       const receivedKeys = Object.keys(data);
 
       const extraFields = receivedKeys.filter((fields) => !allowedKeys.includes(fields));

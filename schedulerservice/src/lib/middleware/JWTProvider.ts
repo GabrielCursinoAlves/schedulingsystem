@@ -1,9 +1,8 @@
-import type { SignoOptionExpiresIn } from "@/types/jwt/SignOptionsType.ts";
 import { Env } from "@/config/environment/env.js";
+import jwt, { SignOptions } from "jsonwebtoken";
 import { ErrorSystem } from "@/error/index.js";
-import jwt from "jsonwebtoken";
 
-export function JWTProvider(userId: string, expiresInValue: SignoOptionExpiresIn): string {
+export function JWTProvider(userId: string, expiresInValue: SignOptions["expiresIn"]): string {
   const secret =  Env.SECRET_KEY;
  
   if(!secret) throw new ErrorSystem.ApplicationError("SECRET KEY was not defined.");

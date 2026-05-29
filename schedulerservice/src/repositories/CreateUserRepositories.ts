@@ -1,5 +1,5 @@
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
-import { UserParams, UserReturns } from "@/interface/UserParams.js";
+import { UserParams, UserReturns } from "@/types/prisma/UserType.js";
 import { scryptSync, randomBytes } from "node:crypto";
 import { Prisma } from "@generated/prisma/client.js";
 import { ErrorSystem } from "@/error/index.js";

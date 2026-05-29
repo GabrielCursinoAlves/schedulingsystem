@@ -1,26 +1,24 @@
-import { SchedulingParams, ShedulingReturns } from "@/interface/ShedulingParams.js";
+import { SchedulingParams, SchedulingReturns } from "@/types/prisma/ShedulingType.js";
 import { cronPatternRecurrence } from "@/lib/cron/cronPatternRecurrence.js";
-import { Transaction } from "@/types/prisma/TransactionType.js";
+import { SchemaSendPayload } from "@/schema/zod/SchedulingPayloadSchema.js";
 import { Prisma } from "@generated/prisma/client.js";
 import { ErrorSystem } from "@/error/index.js";
 
 export class CreateShedulingSystem {
-  execute = async(data: SchedulingParams, tsxprisma: Transaction): Promise<ShedulingReturns> => {
+  execute = async(data: SchedulingParams, tx: Prisma.TransactionClient): Promise<SchedulingReturns> => {
     const { userId, payload, run_at, recurrence_pattern } = data;
-    
+   
     try {
-      const user = await tsxprisma.user.findUnique({ 
-        where: { id: userId },
-        select: {
-          phone: true,
-        }
+      const user = await tx.user.findUnique({ 
+        where: { id: userId }, 
+        select: { phone: true } 
       });
      
       if(!user){
         throw new ErrorSystem.NotFound("User does not exist.");
       }
       
-      const createSheduling = await tsxprisma.scheduledJob.create({
+      const createSheduling = await tx.scheduledJob.create({
         data:{
           userId,
           payload,
@@ -30,22 +28,23 @@ export class CreateShedulingSystem {
         },
       });
 
-      const dataAdditional = {
-        phone: user.phone,
-        aggregate_type: "job",
-        event_type: "job.scheduled"
-      };
-     
+      const dataJobPayload = SchemaSendPayload.parse(createSheduling.payload);
+
       return {
         ...createSheduling,
-        dataAdditional
+        phone: user.phone,
+        event: `notification.${dataJobPayload.type}`
       };
 
     } catch (error) {
       
+      if(error instanceof ErrorSystem.ApplicationError) {
+        throw error;
+      };
+
       if(error instanceof Prisma.PrismaClientValidationError) {
         throw new ErrorSystem.ApplicationError("Invalid field or data sent to database.");
-      }
+      };
             
       throw new ErrorSystem.ApplicationError("Unexpected database error."); 
     }

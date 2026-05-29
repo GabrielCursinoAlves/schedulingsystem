@@ -7,7 +7,7 @@ export class CreateSchedulingSystem {
   constructor(private SchedulingTransaction = new JobCreation()){}
   handle = async(req: FastifyRequest, reply: FastifyReply) => {
     const result = SchemaCreateSystemRouter.safeParse(req.body);
-    const user_id = req.user.userId as string;
+    const user_id = req.user.userId;
     
     if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
 

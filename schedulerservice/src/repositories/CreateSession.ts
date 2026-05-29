@@ -1,9 +1,9 @@
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
-import { Session } from "@/interface/SessionParams.js";
+import { Session } from "@/types/prisma/SessionType.js";
 import { ErrorSystem } from "@/error/index.js";
 
 export class CreateSession {
-  async execute(data: Session): Promise<void>{
+  async execute(data: Session): Promise<void> {
     const { user_id, refreshToken, expiresAt } = data;
 
     try {

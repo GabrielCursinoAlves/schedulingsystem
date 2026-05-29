@@ -4,7 +4,7 @@ import { CronObject } from "@/lib/cron/CronObject.js";
 import { ErrorValidation } from "@/error/index.js";
 import { SchemaTypeZod } from "@/types/index.js";
 
-export function CronPatternValidation(data: SchemaTypeZod["SchemaCreateSchedulingRecurrence"]){
+export function CronPatternValidation(data: SchemaTypeZod["SchemaCreateSchedulingRecurrence"]) {
   if(data.type == "once") return Object.values(CronObject()).join(" ");
 
   const { type, day_of_week } = data;
@@ -14,7 +14,6 @@ export function CronPatternValidation(data: SchemaTypeZod["SchemaCreateSchedulin
   const result = SchemaSchedulingJobCron.safeParse(dataCron);
 
   if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
-  
-  const generateData = GenerateDataCron(result.data);
-  return generateData;
+
+  return GenerateDataCron(result.data);
 }

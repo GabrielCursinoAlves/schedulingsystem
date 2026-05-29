@@ -1,34 +1,32 @@
-import * as amqp from "amqplib";
-import { Connection, Channel } from "amqplib";
-import { ErrorSystem } from "@/error/index.js";
+import { RabbitMQTopology } from "@/infrastructure/messaging/RabbitMQTopology.js";
+import  { Waiter } from "@/interface/RabbitMQ.js";
 import { Env } from "@/config/environment/env.js";
-import { RabbitMQTopology } from "./RabbitMQTopology.js";
+import { Connection, Channel } from "amqplib";
+import * as amqp from "amqplib";
 
 export class RabbitMQConnection {
   constructor(private rabbitMQTopology = new RabbitMQTopology){}
   private reconnectTimeout: NodeJS.Timeout | null = null;
-  private waiters: ((channel: Channel) => void)[] = [];
   private connection: Connection | null = null;
   private static instance: RabbitMQConnection;
   private channel: Channel | null = null;
+  private waiters: Waiter[] = [];
   private isConnecting = false;
   private retryCount = 0;
 
   static getInstance(): RabbitMQConnection {
     if(!this.instance) RabbitMQConnection.instance = new RabbitMQConnection();
-
     return RabbitMQConnection.instance;
   }
 
   async connect(): Promise<void> { 
     if (this.isConnecting) return;
+    this.isConnecting = true;
 
     try {
       const rabbitmq_url = Env.RABBITMQ_URL;
       
-      if(!rabbitmq_url) throw new ErrorSystem.ApplicationError("RABBITMQ_URL was not defined.");
-      this.connection = await amqp.connect(rabbitmq_url);   
-      this.isConnecting = true;
+      this.connection = await amqp.connect(rabbitmq_url!);   
       
       this.connection.on("error", (err) => {
         console.error("RabbitMQ error:", err);
@@ -41,18 +39,28 @@ export class RabbitMQConnection {
       });
 
       this.channel = await this.connection.createChannel();
-      this.waiters.forEach((resolve) => resolve(this.channel!));
+
+      this.channel.on("error", (err) => {
+        console.error("RabbitMQ channel error:", err);
+        this.channel = null;
+      });
 
       await this.rabbitMQTopology.setupMessagingTopology(this.channel);
-
+      this.waiters.forEach(({ resolve }) => resolve(this.channel!));
+     
       this.retryCount = 0;
       this.waiters = [];
 
     } catch (error) {
       console.log(`RabbitMQ has not yet finished initializing the AMQP broker.`);
+
+      this.waiters.forEach(({ reject }) => reject(error));
+      this.waiters = [];
+
+      this.reconnect();
+
     } finally {
       this.isConnecting = false;
-      if (!this.connection) this.reconnect();
     }
   }
 
@@ -71,15 +79,20 @@ export class RabbitMQConnection {
     }, delay);
   }
 
-  async getChannel(): Promise<Channel>{
+  async getChannel(): Promise<Channel> {
     if(this.channel) return this.channel;
 
-    return new Promise((resolve) => {
-      this.waiters.push(resolve);
+    return new Promise((resolve, reject) => {
+      this.waiters.push({ resolve, reject });
     });
   }
 
   async close(): Promise<void> {
+    if(this.reconnectTimeout){
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    };
+
     await this.channel?.close();
     await this.connection?.close();
     this.connection = null;

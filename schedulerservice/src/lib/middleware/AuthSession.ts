@@ -17,12 +17,30 @@ export async function AuthSession(req: FastifyRequest, reply: FastifyReply){
 
   try {
     const payload = jwt.verify(token, secret);
+    
+    if(typeof payload === "string") {
+      throw new ErrorSystem.UnauthorizedError("Invalid token payload.");
+    }
+
     req.user = payload;
 
   } catch (error) {
     if(error instanceof ErrorSystem.ApplicationError) {
-      throw new ErrorSystem.ApplicationError(`Failed to validate token: ${error.message}`);
+      throw error;
     }
+
+    if(error instanceof jwt.TokenExpiredError) {
+      throw new ErrorSystem.UnauthorizedError('Token expired.');
+    }
+
+    if(error instanceof jwt.JsonWebTokenError){
+      throw new ErrorSystem.UnauthorizedError('Invalid token.');
+    } 
+
+    if(error instanceof ErrorSystem.ApplicationError) {
+      throw new ErrorSystem.ApplicationError('Failed to validate token.');
+    }
+
   }
   
 }

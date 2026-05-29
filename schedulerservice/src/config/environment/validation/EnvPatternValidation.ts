@@ -1,4 +1,5 @@
-import { SignoOptionExpiresIn } from "@/types/jwt/SignOptionsType.js";
+
+import { SignOptions } from "jsonwebtoken";
 import "../config.js";
 
 export function required(name: string): string{
@@ -10,14 +11,14 @@ export function required(name: string): string{
   return enValue;
 }
 
-export function toExpires(name: string): SignoOptionExpiresIn {
+export function toExpires(name: string): SignOptions["expiresIn"] {
   const enValue = process.env[name];
 
   if(!enValue){
     throw new Error(`missing field ${enValue} not standard expire.`);
   }
   
-  return enValue as SignoOptionExpiresIn;
+  return enValue as SignOptions["expiresIn"];
 }
 
 export function toNumber(name: string): number {

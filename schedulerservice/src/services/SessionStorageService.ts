@@ -1,4 +1,4 @@
-import { SessionParams, SessionReturns } from "@/interface/SessionParams.js";
+import { SessionParams, SessionReturns } from "@/types/prisma/SessionType.js";
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { JWTProvider } from "@/lib/middleware/JWTProvider.js";
 import { scryptSync, timingSafeEqual } from "node:crypto";

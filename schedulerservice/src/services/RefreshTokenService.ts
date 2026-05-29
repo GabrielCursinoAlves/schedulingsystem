@@ -1,4 +1,4 @@
-import { SessionRefreshReturns, SessionReturns } from "@/interface/SessionParams.js";
+import { SessionRefreshReturns, SessionReturns } from "@/types/prisma/SessionType.js";
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { JWTProvider } from "@/lib/middleware/JWTProvider.js";
 import { RepositoriesSystem } from "@/repositories/index.js";

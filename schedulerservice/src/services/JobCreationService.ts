@@ -1,50 +1,47 @@
 import { PayloadPatternValidation } from "@/lib/validation/PayloadPatternValidation.js";
 import { CronPatternValidation } from "@/lib/validation/CronPatternValidation.js";
+import { SchemaSendPayload } from "@/schema/zod/SchedulingPayloadSchema.js";
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { ensureJsonObject } from "@/lib/prisma/EnsureJsonObject.js";
-import { SchedulingMetadata } from "@/interface/ShedulingParams.js";
+import { ErrorSystem, ErrorValidation } from "@/error/index.js";
 import { RepositoriesSystem } from "@/repositories/index.js";
 import { ConvertCron } from "@/lib/cron/ConvertCron.js";
 import { SchemaTypeZod } from "@/types/index.js";
-import { ErrorSystem } from "@/error/index.js";
 
 export class JobCreation { 
   execute = async(user_id: string, data: SchemaTypeZod["SchemaCreateSystemService"]): Promise<void> => {
     try {
       const { payload, run_at, recurrence_pattern } = data;
-
-      let payloadPattern = PayloadPatternValidation(payload);
+     
+      const payloadJobPattern = PayloadPatternValidation(payload);
+      
       const cronPatternRecurrence = CronPatternValidation(recurrence_pattern);
      
       const scheduledAt = ConvertCron(cronPatternRecurrence) ?? new Date();
       
       const dataShedulingSystem = {
+        recurrence_pattern: cronPatternRecurrence, 
+        payload: payloadJobPattern,
         userId: user_id,
-        payload: payloadPattern,
-        run_at,
-        recurrence_pattern: cronPatternRecurrence 
+        run_at
       };
 
       await prisma.$transaction(async(tx) => {
         const ShedulingSystem = await new RepositoriesSystem.CreateShedulingSystem().execute(dataShedulingSystem, tx);
-        
-        const { id, userId, dataAdditional } = ShedulingSystem;
-        const { aggregate_type, event_type, phone }: SchedulingMetadata = dataAdditional;
        
-        payloadPattern = ensureJsonObject(
-          ShedulingSystem.payload, {
-            phone,
-            userId,
-            jobId: id
-          }
-        );
-        
+        const { id, userId, event, phone } = ShedulingSystem;
+
+        const resultPayload = SchemaSendPayload.safeParse(ShedulingSystem.payload);
+
+        if(!resultPayload.success) throw new ErrorValidation.ZodValidationError(resultPayload.error);
+       
+        const payloadOutboxPattern = ensureJsonObject(resultPayload.data, { jobId: id, phone, userId });
+       
         const dataOutbox = { 
-          payload: payloadPattern,
-          event_type,
+          payload: payloadOutboxPattern,
+          scheduleId: id,
           scheduledAt,
-          scheduleId: id, 
-          aggregate_type,
+          event
         };
         
         await new RepositoriesSystem.CreateOutbox().execute(dataOutbox, tx);

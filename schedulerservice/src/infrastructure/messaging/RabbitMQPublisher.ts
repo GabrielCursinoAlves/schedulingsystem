@@ -11,7 +11,7 @@ export class RabbitMQPublisher {
     const publishConfirm = this.channel.sendToQueue(
       configRabbitMQ.queue.delay,
       message, {
-        persistent: true
+        persistent: true,
       }
     );
 

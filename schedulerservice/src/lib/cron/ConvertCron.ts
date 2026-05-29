@@ -3,9 +3,7 @@ import { ErrorSystem } from "@/error/index.js";
 
 export function ConvertCron(cron: string) {
   try {
-    const dataCron = CronExpressionParser.parse(cron, {
-      tz: "America/Sao_Paulo"
-    });
+    const dataCron = CronExpressionParser.parse(cron, { tz: "America/Sao_Paulo" });
     return dataCron.next().toDate();
    
   } catch(error) {
