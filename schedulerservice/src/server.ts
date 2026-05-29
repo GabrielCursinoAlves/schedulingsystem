@@ -21,4 +21,4 @@ const host = Env.HOST;
 
 await app.listen({port, host}).then(() => {
   console.log(`Server is running on ${host}: ${port}`); 
-});
+}); 

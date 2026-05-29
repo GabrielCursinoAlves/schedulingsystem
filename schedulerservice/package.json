@@ -6,6 +6,8 @@
   "scripts": {
     "pm2:start-development": "npx pm2 start ecosystem.config.cjs --env development",
     "dev": "npx tsx --watch --no-warnings src/server.ts",
+    "prisma:migrate:reset": "npx prisma migrate reset",
+    "worker": "node dist/src/workers/OutboxWorker.js",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
