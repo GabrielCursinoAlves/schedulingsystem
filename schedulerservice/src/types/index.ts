@@ -1,3 +1,4 @@
+import { SchemaOutboxSchedulingSystem } from "@/schema/zod/OutboxSchedulingSystemSchema.js";
 import { SchemaCreateSystemRouter } from "@/schema/zod/CreateSchedulingSystemSchema.js";
 import { SchemaRecurrencePattern } from "@/schema/zod/SchedulingRecurrenceSchema.js";
 import { SchemaSchedulingJobCron } from "@/schema/zod/SchedulingJobSchema.js";
@@ -7,6 +8,7 @@ import { WorkPayload } from "@/schema/zod/WorkPayloadSchema.js";
 import { z } from "zod";
 
 export type SchemaTypeZod = {
+  SchemaOutboxSchedulingSystem: z.infer<typeof SchemaOutboxSchedulingSystem>,
   SchemaSchedulingJobCronController: z.infer<typeof SchemaSchedulingJobCron>,
   SchemaCreateSchedulingRecurrence: z.infer<typeof SchemaRecurrencePattern>,
   SchemaCreateSystemService: z.infer<typeof SchemaCreateSystemRouter>,
