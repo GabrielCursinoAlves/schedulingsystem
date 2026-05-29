@@ -8,7 +8,7 @@ const SendSmsPayload = z.object({
 const SendAlertPayload = z.object({
   type: z.literal("send_alert"),
   message: z.string(),
-  severity: z.enum(["low", "medium"], "high").default("medium")
+  severity: z.enum(["low", "medium","high"]).default("medium")
 });
 
 export const SchemaSendPayload = z.discriminatedUnion("type", [
