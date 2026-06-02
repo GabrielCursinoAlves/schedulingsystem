@@ -36,14 +36,15 @@ export class JobCreation {
         if(!resultPayload.success) throw new ErrorValidation.ZodValidationError(resultPayload.error);
        
         const payloadOutboxPattern = ensureJsonObject(resultPayload.data, { jobId: id, phone, userId });
-       
+        
         const dataOutbox = { 
+          eventId: payloadOutboxPattern.eventId,
           payload: payloadOutboxPattern,
           scheduleId: id,
           scheduledAt,
           event
         };
-        
+      
         await new RepositoriesSystem.CreateOutbox().execute(dataOutbox, tx);
        
       });

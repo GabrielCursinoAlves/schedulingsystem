@@ -4,11 +4,12 @@ import { ErrorSystem } from "@/error/index.js";
 
 export class CreateOutbox {
   async execute(data: OutboxParams, tx: Prisma.TransactionClient): Promise<void> {
-    const { event, scheduleId, scheduledAt, payload } = data;
+    const { eventId, event, scheduleId, scheduledAt, payload } = data;
     
     try {
       await tx.outbox.create({
         data:{
+          event_id: eventId,
           scheduledAt,
           scheduleId,
           payload,
