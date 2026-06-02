@@ -14,9 +14,7 @@ export class CreateShedulingSystem {
         select: { phone: true } 
       });
      
-      if(!user){
-        throw new ErrorSystem.NotFound("User does not exist.");
-      }
+      if(!user) throw new ErrorSystem.NotFound("User does not exist.");
       
       const createSheduling = await tx.scheduledJob.create({
         data:{
@@ -37,7 +35,6 @@ export class CreateShedulingSystem {
       };
 
     } catch (error) {
-      
       if(error instanceof ErrorSystem.ApplicationError) {
         throw error;
       };
@@ -48,6 +45,5 @@ export class CreateShedulingSystem {
             
       throw new ErrorSystem.ApplicationError("Unexpected database error."); 
     }
-    
   }
 }

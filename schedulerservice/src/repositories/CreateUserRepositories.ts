@@ -29,10 +29,13 @@ export class CreateUser {
       return createUser;
 
     }catch(error) {
+      if(error instanceof ErrorSystem.ApplicationError) {
+        throw error;
+      };
 
       if(error instanceof Prisma.PrismaClientValidationError) {
         throw new ErrorSystem.ApplicationError("Invalid field or data sent to database."); 
-      }
+      };
       
       throw new ErrorSystem.ApplicationError("Unexpected database error.");
     }

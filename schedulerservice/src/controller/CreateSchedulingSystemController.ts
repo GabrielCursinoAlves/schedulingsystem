@@ -1,7 +1,7 @@
 import { SchemaCreateSystemRouter } from "@/schema/zod/CreateSchedulingSystemSchema.js";
 import { JobCreation } from "@/services/JobCreationService.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ErrorValidation } from "@/error/index.js";
+import { ErrorSystem, ErrorValidation } from "@/error/index.js";
 
 export class CreateSchedulingSystem {
   constructor(private SchedulingTransaction = new JobCreation()){}
@@ -11,6 +11,8 @@ export class CreateSchedulingSystem {
     
     if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
 
+    if(!user_id) throw new ErrorSystem.NotFound("User does not exist.");
+  
     const { payload, run_at, recurrence_pattern } = result.data;
 
     const schedulingData = { payload, run_at, recurrence_pattern };
