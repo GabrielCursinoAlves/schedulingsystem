@@ -1,10 +1,10 @@
 import { SchemaCreateSystemRouter } from "@/schema/zod/CreateSchedulingSystemSchema.js";
-import { JobCreation } from "@/services/JobCreationService.js";
-import { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorSystem, ErrorValidation } from "@/error/index.js";
+import { IJobCreation } from "@/interface/IJobCreation.js";
+import { FastifyReply, FastifyRequest } from "fastify";
 
 export class CreateSchedulingSystem {
-  constructor(private SchedulingTransaction = new JobCreation()){}
+  constructor(private SchedulingTransaction: IJobCreation){}
   handle = async(req: FastifyRequest, reply: FastifyReply) => {
     const result = SchemaCreateSystemRouter.safeParse(req.body);
     const user_id = req.user.userId;

@@ -8,7 +8,7 @@ import { ErrorSystem } from "@/error/index.js";
 export class SessionStorage {
   verify = async(data: SessionParams): Promise<SessionReturns> => {
     const { email, password } = data;
-   
+    
     const acessTokenExpires = Env.ACESS_TOKEN_EXPIRES;
     if(!acessTokenExpires) 
       throw new ErrorSystem.ApplicationError("ACESS_TOKEN_EXPIRES was not defined.");

@@ -1,9 +1,9 @@
+import { ControllerSystemDi } from "@/infrastructure/container/index.js";
 import { ControllerZodInstance } from "@/types/zod/InstanceZodType.js";
 import { SchemaSession } from "@/schema/zod/SessionSchema.js";
-import { ControllerSystem } from "@/controller/index.js";
 
 export const createSessionRouter = async(app: ControllerZodInstance) => {
   
-  app.post("/login", { schema: {body: SchemaSession} }, new ControllerSystem.CreateSession().handle);
+  app.post("/login", { schema: {body: SchemaSession} }, ControllerSystemDi.createSession.handle);
   
 };

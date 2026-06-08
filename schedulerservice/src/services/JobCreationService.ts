@@ -1,14 +1,17 @@
 import { PayloadPatternValidation } from "@/lib/validation/PayloadPatternValidation.js";
 import { CronPatternValidation } from "@/lib/validation/CronPatternValidation.js";
+import { ICreateShedulingSystem } from "@/interface/ICreateShedulingSystem.js";
 import { SchemaSendPayload } from "@/schema/zod/SchedulingPayloadSchema.js";
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { ensureJsonObject } from "@/lib/prisma/EnsureJsonObject.js";
 import { ErrorSystem, ErrorValidation } from "@/error/index.js";
-import { RepositoriesSystem } from "@/repositories/index.js";
+import { ICreateOutbox } from "@/interface/ICreateOutbox.js";
+import { IJobCreation } from "@/interface/IJobCreation.js";
 import { ConvertCron } from "@/lib/cron/ConvertCron.js";
 import { SchemaTypeZod } from "@/types/index.js";
 
-export class JobCreation { 
+export class JobCreation implements IJobCreation { 
+  constructor(private createScheduling: ICreateShedulingSystem, private createOutbox: ICreateOutbox) {}
   execute = async(user_id: string, data: SchemaTypeZod["SchemaCreateSystemService"]): Promise<void> => {
     try {
       const { payload, run_at, recurrence_pattern } = data;
@@ -27,7 +30,7 @@ export class JobCreation {
       };
 
       await prisma.$transaction(async(tx) => {
-        const ShedulingSystem = await new RepositoriesSystem.CreateShedulingSystem().execute(dataShedulingSystem, tx);
+        const ShedulingSystem = await this.createScheduling.execute(dataShedulingSystem, tx);
        
         const { id, userId, event, phone } = ShedulingSystem;
 
@@ -45,7 +48,7 @@ export class JobCreation {
           event
         };
       
-        await new RepositoriesSystem.CreateOutbox().execute(dataOutbox, tx);
+        await this.createOutbox.execute(dataOutbox, tx);
        
       });
 

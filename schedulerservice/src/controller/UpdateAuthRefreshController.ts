@@ -1,12 +1,12 @@
 import { SchemaRefreshToken } from "@/schema/zod/RefreshTokenSchema.js";
-import { RefreshToken } from "@/services/RefreshTokenService.js";
+import { IRefreshToken } from "@/interface/IRefreshToken.js";
 import { RepositoriesSystem } from "@/repositories/index.js";
 import { expiresInToMs } from "@/lib/date/ExpiresInTo.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorValidation } from "@/error/index.js";
 
 export class UpdateAuthRefresh {
-  constructor(private refreshToken = new RefreshToken()){}
+  constructor(private refreshToken: IRefreshToken){}
   handle = async(req: FastifyRequest, reply: FastifyReply) => {
     const result = SchemaRefreshToken.safeParse(req.body);
    

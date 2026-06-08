@@ -1,4 +1,4 @@
-import { SessionStorage } from "@/services/SessionStorageService.js";
+import { ISessionStorage } from "@/interface/ISessionStorage.js";
 import { SchemaSession } from "@/schema/zod/SessionSchema.js";
 import { RepositoriesSystem } from "@/repositories/index.js";
 import { expiresInToMs } from "@/lib/date/ExpiresInTo.js";
@@ -6,19 +6,17 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorValidation } from "@/error/index.js";
 
 export class CreateSession {
-  constructor(private Session = new SessionStorage()){}
+  constructor(private Session: ISessionStorage){}
   handle = async(req: FastifyRequest, reply: FastifyReply) => {
     const result = SchemaSession.safeParse(req.body);
-
     if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
 
     const { email, password } = result.data;
-
+    
     const credentialsData = await this.Session.verify({ email, password });
     const { user_id, refreshToken, expiresAt, acessToken } = credentialsData;
 
     const expiresAtToken = new Date(Date.now() + expiresInToMs(expiresAt));
-      
     const sessionData = {
       user_id,
       refreshToken,
