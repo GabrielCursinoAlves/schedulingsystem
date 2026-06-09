@@ -10,13 +10,14 @@ const ControllerDi = {
     new RepositoriesSystem.CreateOutbox()
   ),
   sessionStorage: new SessionStorage(),
+  sessionCreation: new RepositoriesSystem.CreateSession(),
   createUser: new RepositoriesSystem.CreateUser(),
   refreshToken: new RefreshToken()
 };
 
 export const ControllerSystemDi = {
   createScheduling: new ControllerSystem.CreateSchedulingSystem(ControllerDi.jobCreation),
-  createSession: new ControllerSystem.CreateSession(ControllerDi.sessionStorage),
+  createSession: new ControllerSystem.CreateSession(ControllerDi.sessionStorage, ControllerDi.sessionCreation),
   createUser: new ControllerSystem.CreateUser(ControllerDi.createUser),
-  updateAuthRefresh: new ControllerSystem.UpdateAuthRefresh(ControllerDi.refreshToken)
+  updateAuthRefresh: new ControllerSystem.UpdateAuthRefresh(ControllerDi.refreshToken, ControllerDi.sessionCreation)
 };

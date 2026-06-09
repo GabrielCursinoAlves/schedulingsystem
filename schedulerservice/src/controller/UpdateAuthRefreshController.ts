@@ -1,12 +1,12 @@
 import { SchemaRefreshToken } from "@/schema/zod/RefreshTokenSchema.js";
+import { ICreateSession } from "@/interface/ICreateSession.js";
 import { IRefreshToken } from "@/interface/IRefreshToken.js";
-import { RepositoriesSystem } from "@/repositories/index.js";
 import { expiresInToMs } from "@/lib/date/ExpiresInTo.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ErrorValidation } from "@/error/index.js";
 
 export class UpdateAuthRefresh {
-  constructor(private refreshToken: IRefreshToken){}
+  constructor(private refreshToken: IRefreshToken, private CreateSession: ICreateSession){}
   handle = async(req: FastifyRequest, reply: FastifyReply) => {
     const result = SchemaRefreshToken.safeParse(req.body);
    
@@ -26,7 +26,7 @@ export class UpdateAuthRefresh {
       refreshToken: tokenData.refreshToken
     };
 
-    await new RepositoriesSystem.CreateSession().execute(sessionData);
+    await this.CreateSession.execute(sessionData);
 
     return reply.code(200).send({
       message: "Credentials updated successfully.", 
