@@ -1,0 +1,27 @@
+services:
+  scheduler-notification:
+    env_file:
+      - notification-service/.env.local
+      - notification-service/.env
+      - ./.env.root
+    environment:
+      DOCKER: "true"
+    build:
+      context: notification-service
+    ports:
+      - "3305:3305"
+    restart: unless-stopped
+    depends_on:
+      pg-notification:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      app-network:
+    volumes:
+      - ./notification-service:/app           
+      - /app/dist  
+
+networks:
+  app-network:
+    driver: bridge

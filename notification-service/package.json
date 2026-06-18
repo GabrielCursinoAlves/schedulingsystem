@@ -1,0 +1,35 @@
+{
+  "name": "notification-service",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "npx tsx --watch --no-warnings src/server.ts",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:generate": "npx prisma generate",
+    "prisma:studio": "npx prisma studio",
+    "build": "tsc && tsc-alias"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
+    "amqplib": "^1.0.3",
+    "cron": "^4.3.3",
+    "cron-parser": "^5.4.0",
+    "fastify": "^5.6.1",
+    "fastify-type-provider-zod": "^6.1.0",
+    "prisma": "^7.2.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@prisma/client": "^7.2.0",
+    "@tsconfig/node22": "^22.0.2",
+    "@types/amqplib": "^0.10.6",
+    "@types/node": "^24.7.2",
+    "tsc-alias": "^1.8.17",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

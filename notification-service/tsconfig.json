@@ -1,0 +1,17 @@
+{
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "target": "ES2023",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@generated/*": ["./generated/*"] 
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
