@@ -2,7 +2,7 @@ services:
   pg:
     image: postgres:16-alpine
     env_file:
-      - .env.root
+      - /schedulerservice/.env.local
     restart: always
     ports:
       - "5432:5432"
@@ -15,6 +15,24 @@ services:
     volumes:
       - ./schedulerservice/docker/init-db:/docker-entrypoint-initdb.d
       - scheduler_pg_data:/var/lib/postgresql/data
+    networks:
+      app-network:
+  pg-notification:
+    image: postgres:16-alpine
+    env_file:
+      - /notification-service/.env.local
+    restart: always
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
+    volumes:
+      - ./notification-service/docker/init-db:/docker-entrypoint-initdb.d
+      - notification_pg_data:/var/lib/postgresql/data
     networks:
       app-network:
   rabbitmq:
@@ -37,6 +55,7 @@ services:
       app-network:
 
 volumes:
+  notification_pg_data:
   scheduler_pg_data:
   rabbitmq_data:
 
