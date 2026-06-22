@@ -1,7 +1,7 @@
+import { SchemaOutboxSchedulingSystem } from "@/schema/zod/OutboxSchedulingSystemSchema.js";
 import { RabbitMQConnection } from "@/infrastructure/messaging/RabbitMQConnection.js";
 import { RabbitMQPublisher } from "@/infrastructure/messaging/RabbitMQPublisher.js";
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
-import { WorkPayload } from "@/schema/zod/WorkPayloadSchema.js";
 import { ErrorValidation } from "@/error/index.js";
 
 async function start() {
@@ -12,7 +12,7 @@ async function start() {
 
   async function WorkerScheduled(){
       const nextWindowDate = new Date(Date.now() + 10 * 60 * 1000);
-      
+     
       try {
         const rabbitMQPublish = new RabbitMQPublisher(channelRabbitMQ); 
         
@@ -30,10 +30,11 @@ async function start() {
         });
         
         if(!messages.length) return;
-
+       
         for(const message of messages) {
           try {
-            const result = WorkPayload.safeParse(message.payload);
+            
+            const result = SchemaOutboxSchedulingSystem.safeParse(message.payload);
             
             if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
 
