@@ -7,18 +7,36 @@ datasource db {
   provider = "postgresql"
 }
 
+enum DispatchEventype {
+  notification_send_alert @map("notification.send_alert")
+  notification_send_sms   @map("notification.send_sms")
+}
+
+enum DispatchSeverity {
+  medium
+  high
+  low
+}
+
+enum DispatchStatus {
+  processing
+  pending
+  failed
+  sent
+}
+
 model NotificationDispatch {
-  id           String    @id @default(uuid())
-  eventId      String    @unique
-  jobId        String
-  eventype     String
-  userId       String
+  id           String           @id @default(uuid())
+  eventId      String           @unique @map("event_id")
+  jobId        String           @map("job_id")
+  eventype     DispatchEventype
+  userId       String           @map("user_id")
   phone        String
   message      String
-  severity     String    @default("medium")
-  status       String    @default("pending")
-  attempts     Int       @default(0)
+  severity     DispatchSeverity @default(medium)
+  status       DispatchStatus   @default(pending)
+  attempts     Int              @default(0)
   error_reason String?
   processed_at DateTime?
-  created_at   DateTime  @default(now()) @db.Timestamptz()
+  created_at   DateTime         @default(now()) @db.Timestamptz()
 }
