@@ -32,7 +32,7 @@ model ScheduledJob {
 model Outbox {
   id           String    @id @default(uuid())
   scheduleId   String
-  event_id     String?   @unique
+  event_id     String    @unique
   event        String
   payload      Json
   status       String    @default("pending")
