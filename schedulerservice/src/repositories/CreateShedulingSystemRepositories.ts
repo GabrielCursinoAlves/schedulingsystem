@@ -6,11 +6,11 @@ import { ErrorSystem } from "@/error/index.js";
 
 export class CreateShedulingSystem {
   execute = async(data: SchedulingParams, tx: Prisma.TransactionClient): Promise<SchedulingReturns> => {
-    const { userId, payload, run_at, recurrence_pattern } = data;
+    const { userId: user_id, payload, run_at, recurrence_pattern } = data;
    
     try {
       const user = await tx.user.findUnique({ 
-        where: { id: userId }, 
+        where: { id: user_id }, 
         select: { phone: true } 
       });
      
@@ -18,7 +18,7 @@ export class CreateShedulingSystem {
       
       const createSheduling = await tx.scheduledJob.create({
         data:{
-          userId,
+          user_id,
           payload,
           run_at,
           recurrence_pattern,
