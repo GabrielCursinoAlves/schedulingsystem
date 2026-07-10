@@ -8,45 +8,55 @@ datasource db {
 }
 
 model User {
-  id           String         @id @default(uuid())
-  username     String
-  phone        String
-  password     String
-  email        String         @unique
-  created_at   DateTime       @default(now()) @db.Timestamptz()
-  ScheduledJob ScheduledJob[]
-  sessions     Session[]
+  id             String         @id @default(uuid())
+  username       String
+  phone          String         @unique
+  password       String
+  email          String         @unique
+  created_at     DateTime       @default(now()) @db.Timestamptz()
+  scheduled_jobs ScheduledJob[]
+  sessions       Session[]
 }
 
 model ScheduledJob {
   id                 String   @id @default(uuid())
-  userId             String
+  user_id            String
   payload            Json
-  AuthorJob          User     @relation(fields: [userId], references: [id])
+  user               User     @relation(fields: [user_id], references: [id])
   run_at             DateTime @db.Timestamptz()
   recurrence_pattern String
   is_recurring       Boolean
   created_at         DateTime @default(now()) @db.Timestamptz()
+  outboxes           Outbox[]
+
+  @@index([user_id])
 }
 
 model Outbox {
-  id           String    @id @default(uuid())
-  scheduleId   String
-  event_id     String    @unique
+  id           String       @id @default(uuid())
+  schedule_id  String
+  schedule_job ScheduledJob @relation(fields: [schedule_id], references: [id])
+  event_id     String       @unique
   event        String
   payload      Json
-  status       String    @default("pending")
-  scheduledAt  DateTime  @default(now()) @db.Timestamptz()
+  status       String       @default("pending")
+  scheduled_at DateTime     @default(now()) @db.Timestamptz()
   error_reason String?
   processed_at DateTime?
-  created_at   DateTime  @default(now()) @db.Timestamptz()
+  created_at   DateTime     @default(now()) @db.Timestamptz()
+
+  @@index([schedule_id])
+  @@index([status])
 }
 
 model Session {
   id         String   @id @default(uuid())
-  userId     String
-  AuthorJob  User     @relation(fields: [userId], references: [id])
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
   token      String   @unique
-  expiresAt  DateTime
+  expires_at DateTime
   created_at DateTime @default(now()) @db.Timestamptz()
+
+  @@index([expires_at])
+  @@index([user_id])
 }
