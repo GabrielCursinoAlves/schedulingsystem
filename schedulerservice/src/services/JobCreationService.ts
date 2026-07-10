@@ -32,13 +32,13 @@ export class JobCreation implements IJobCreation {
       await prisma.$transaction(async(tx) => {
         const ShedulingSystem = await this.createScheduling.execute(dataShedulingSystem, tx);
        
-        const { id, userId, event, phone } = ShedulingSystem;
+        const { id, user_id, event, phone } = ShedulingSystem;
 
         const resultPayload = SchemaSendPayload.safeParse(ShedulingSystem.payload);
 
         if(!resultPayload.success) throw new ErrorValidation.ZodValidationError(resultPayload.error);
        
-        const payloadOutboxPattern = ensureJsonObject(resultPayload.data, { jobId: id, phone, userId });
+        const payloadOutboxPattern = ensureJsonObject(resultPayload.data, { jobId: id, phone, userId: user_id });
         
         const dataOutbox = { 
           eventId: payloadOutboxPattern.eventId,

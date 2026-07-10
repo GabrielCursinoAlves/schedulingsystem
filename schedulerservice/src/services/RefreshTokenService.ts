@@ -35,13 +35,13 @@ export class RefreshToken {
     if(!session) 
       throw new ErrorSystem.UnauthorizedError("RefreshToken Invalid authentication credentials.");
     
-    if(session.expiresAt && new Date() > session.expiresAt) 
+    if(session.expires_at && new Date() > session.expires_at) 
       throw new ErrorSystem.ApplicationError("Session expired. Please log in again.");
 
     return {
-      user_id: session.userId,
+      user_id: session.user_id,
       acessToken: session.token,
-      expiresAt: session.expiresAt
+      expiresAt: session.expires_at
     };
   }
 

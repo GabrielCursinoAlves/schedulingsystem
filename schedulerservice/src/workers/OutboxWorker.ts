@@ -19,13 +19,13 @@ async function start() {
         const messages = await prisma.outbox.findMany({
           where: { 
             status: "pending",
-            scheduledAt: { 
+            scheduled_at: { 
               lte: nextWindowDate
             } 
           },
           take: 50,
           orderBy: {
-            scheduledAt: "asc"
+            scheduled_at: "asc"
           }
         });
         
