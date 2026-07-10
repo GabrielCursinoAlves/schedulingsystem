@@ -21,7 +21,7 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
-    "@prisma/adapter-pg": "^7.0.1",
+    "@prisma/adapter-pg": "^7.2.0",
     "amqplib": "^1.0.3",
     "cron": "^4.3.3",
     "cron-parser": "^5.4.0",
