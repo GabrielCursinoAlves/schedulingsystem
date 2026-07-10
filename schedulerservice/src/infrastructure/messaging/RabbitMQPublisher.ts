@@ -5,7 +5,7 @@ import { Channel } from "amqplib";
 
 export class RabbitMQPublisher {
   constructor(private readonly channel: Channel) {}
-  async publishCreateJob(data: SchemaTypeZod["SchemaWorkPayload"]) {
+  async publishCreateJob(data: SchemaTypeZod["SchemaOutboxSchedulingSystem"]) {
     const message = Buffer.from(JSON.stringify(data));
     
     const publishConfirm = this.channel.sendToQueue(
