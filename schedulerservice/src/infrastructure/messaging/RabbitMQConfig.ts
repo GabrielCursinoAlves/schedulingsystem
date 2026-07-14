@@ -6,6 +6,7 @@ export const configRabbitMQ = {
   queue: {
     job: "job.queue",
     delay: "job.delay",
+    retry: "job.retry",
     dlq: "job.dlq"
   }, 
   routingKey: {

@@ -39,7 +39,7 @@ export class RabbitMQTopology {
 
     await this.createQueue(channel, { queueName: configRabbitMQ.queue.dlq });
     await this.createQueue(channel, { 
-      queueName:  configRabbitMQ.queue.job , 
+      queueName:  configRabbitMQ.queue.job, 
       deadExchange: configRabbitMQ.exchanges.dlx,
       deadRoutingKey: configRabbitMQ.routingKey.dead_job 
     });
@@ -50,6 +50,13 @@ export class RabbitMQTopology {
       deadRoutingKey: configRabbitMQ.routingKey.create_job,
       timeTtl: Env.DELAY_TTL_RABBITMQ
     });
+
+    await this.createQueue(channel, {
+      queueName: configRabbitMQ.queue.retry,
+      deadExchange:  configRabbitMQ.exchanges.name,
+      deadRoutingKey: configRabbitMQ.routingKey.create_job,
+      timeTtl: Env.DELAY_TTL_RETRY_RABBITMQ
+    }); 
 
     await this.createBindQueue(channel, {
       exchangeName: configRabbitMQ.exchanges.name, 
