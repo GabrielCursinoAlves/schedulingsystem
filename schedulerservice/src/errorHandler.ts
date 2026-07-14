@@ -16,8 +16,7 @@ export const ErrorHandler = (
   };
 
   if(error instanceof ErrorValidation.ZodValidationError){
-    
-     reply.status(error.statusCode).send({
+     return reply.status(error.statusCode).send({
       error: error.name,
       statusCode: error.statusCode,
       message: error.message,
@@ -26,14 +25,15 @@ export const ErrorHandler = (
   }
 
   if(error instanceof ErrorSystem.ApplicationError) {
-
-    reply.status(error.statusCode).send({
+    return reply.status(error.statusCode).send({
       error: error.name,
       statusCode: error.statusCode,
       message: error.message
     });
   }
- 
+  
+  request.log.error(error);
+  
   reply.status(500).send({
     error: "Internal Server Error",
     statusCode: 500,
