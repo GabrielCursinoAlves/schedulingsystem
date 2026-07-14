@@ -4,8 +4,8 @@ import { ErrorSystem } from "@/error/index.js";
 
 export class CreateSession {
   async execute(data: Session): Promise<void> {
-    const { user_id: user_id, refreshToken, expiresAt: expires_at } = data;
-
+    const { user_id, refreshToken, expiresAt: expires_at } = data;
+ 
     try {
       await prisma.session.create({
         data:{
@@ -15,7 +15,7 @@ export class CreateSession {
         }
       })
     } catch (error) {
-      throw new ErrorSystem.ApplicationError("Unexpected database error."); 
+      throw new ErrorSystem.ApplicationError("Unexpected database error"); 
     }
   }
 }
