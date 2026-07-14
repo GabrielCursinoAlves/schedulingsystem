@@ -53,9 +53,15 @@ export class JobCreation implements IJobCreation {
       });
 
     } catch (error) {
+      
+      if(error instanceof ErrorValidation.ZodValidationError) {
+        throw error;
+      }
+
       if(error instanceof ErrorSystem.ApplicationError) {
         throw new ErrorSystem.ApplicationError(`Transaction process failure: ${error.message}`);
       }
-    }
+
+      throw new ErrorSystem.ApplicationError(`Unexpected error: ${error instanceof Error ? error.message : String(error)}`);}
   }
 }
