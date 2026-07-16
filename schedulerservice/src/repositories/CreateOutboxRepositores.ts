@@ -17,6 +17,10 @@ export class CreateOutbox {
         }
       });
     } catch (error) {
+       if(error instanceof Prisma.PrismaClientValidationError) {
+        throw new ErrorSystem.ApplicationError("Invalid field or data sent to database.");
+      };
+      
       throw new ErrorSystem.ApplicationError("Unexpected database error."); 
     }
   }

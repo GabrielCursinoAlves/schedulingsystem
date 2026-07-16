@@ -1,8 +1,8 @@
 import { SchedulingParams, SchedulingReturns } from "@/types/prisma/ShedulingType.js";
 import { cronPatternRecurrence } from "@/lib/cron/cronPatternRecurrence.js";
 import { SchemaSendPayload } from "@/schema/zod/SchedulingPayloadSchema.js";
+import { ErrorSystem, ErrorValidation } from "@/error/index.js";
 import { Prisma } from "@generated/prisma/client.js";
-import { ErrorSystem } from "@/error/index.js";
 
 export class CreateShedulingSystem {
   execute = async(data: SchedulingParams, tx: Prisma.TransactionClient): Promise<SchedulingReturns> => {
@@ -26,15 +26,21 @@ export class CreateShedulingSystem {
         },
       });
 
-      const dataJobPayload = SchemaSendPayload.parse(createSheduling.payload);
+      const dataJobPayload = SchemaSendPayload.safeParse(createSheduling.payload);
+
+      if (!dataJobPayload.success) throw new ErrorValidation.ZodValidationError(dataJobPayload.error);
 
       return {
         ...createSheduling,
         phone: user.phone,
-        event: `notification.${dataJobPayload.type}`
+        event: `notification.${dataJobPayload.data.type}`
       };
 
     } catch (error) {
+      if (error instanceof ErrorValidation.ZodValidationError) {
+        throw error;
+      }
+
       if(error instanceof ErrorSystem.ApplicationError) {
         throw error;
       };
