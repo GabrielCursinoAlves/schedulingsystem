@@ -24,7 +24,7 @@ export class CreateUser {
           phone,
           password: storedHash
         }
-      });
+      }); 
     
       return createUser;
 
