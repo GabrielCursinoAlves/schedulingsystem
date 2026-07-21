@@ -7,6 +7,14 @@ export class ApplicationError extends Error {
   }
 }
 
+export class ConflictError extends ApplicationError {
+  constructor(message: string){
+    super(message);
+    this.name = 'ConflictError';
+    this.statusCode = 409;
+  }
+}
+
 export class NotFoundError extends ApplicationError {
   constructor(message: string){
     super(message);
@@ -31,3 +39,10 @@ export class UnauthorizedError extends ApplicationError {
   }
 }
 
+export class TooManyRequestsError extends ApplicationError {
+  constructor(message: string){
+    super(message);
+    this.name = 'TooManyRequestsError';
+    this.statusCode = 429;
+  }
+}
