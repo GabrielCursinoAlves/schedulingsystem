@@ -5,5 +5,6 @@ export const Env = {
   HOST: required("HOST"),
   DATABASE_URL: required("DATABASE_URL"),
   RABBITMQ_URL: required("RABBITMQ_URL"),
-  MAX_RETRY_DELAY: toNumber("MAX_RETRY_DELAY")
+  MAX_RETRY_DELAY: toNumber("MAX_RETRY_DELAY"),
+  MAX_RETRY_COUNT : toNumber("MAX_RETRY_COUNT")
 };

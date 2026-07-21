@@ -1,8 +1,10 @@
 import { CreateHealthcheck } from "@/routers/HealthcheckRouter.js";
 import { CreateZodFastify } from "@/config/zod/zodFastify.js";
+import { bootstrap } from "./lifecycle/bootstrap.js";
 import { Env } from "@/config/environment/env.js";
 
 const app = CreateZodFastify(); 
+await bootstrap(app);
 
 app.register(CreateHealthcheck);
 
