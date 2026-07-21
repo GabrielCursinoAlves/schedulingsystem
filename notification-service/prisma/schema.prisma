@@ -27,10 +27,10 @@ enum DispatchStatus {
 
 model NotificationDispatch {
   id           String           @id @default(uuid())
-  eventId      String           @unique @map("event_id")
-  jobId        String           @map("job_id")
-  eventype     DispatchEventype
-  userId       String           @map("user_id")
+  event_id     String           @unique
+  job_id       String
+  event_type   DispatchEventype
+  user_id      String
   phone        String
   message      String
   severity     DispatchSeverity @default(medium)
