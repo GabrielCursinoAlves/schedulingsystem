@@ -1,7 +1,6 @@
-import { NotificationDispatchReturn } from "@/types/prisma/NotificationDispatchType.js";
+import { EventypeRecord, NotificationDispatchReturn } from "@/types/prisma/NotificationDispatchType.js";
 import { ICreateNotification } from "@/interface/ICreateNotification.js";
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
-import { DispatchEventype } from "@generated/prisma/client.js";
 import { Prisma } from "@generated/prisma/client.js";
 import { SchemaTypeZod } from "@/types/index.js";
 import { ErrorSystem } from "@/error/index.js";
@@ -14,7 +13,7 @@ export class CreateNotification implements ICreateNotification {
         data: {
           event_id: eventId,
           job_id: jobId,
-          event_type: event.replace(/\./g, "_") as DispatchEventype,
+          event_type: EventypeRecord[event],
           user_id: payload.userId,
           phone: payload.phone,
           message: payload.message,
