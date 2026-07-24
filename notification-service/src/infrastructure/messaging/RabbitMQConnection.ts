@@ -1,5 +1,6 @@
 import  { Waiter } from "@/interface/RabbitMQ.js";
 import { Env } from "@/config/environment/env.js";
+import { ErrorSystem } from "@/error/index.js";
 import { Connection, Channel } from "amqplib";
 import * as amqp from "amqplib";
 
@@ -84,11 +85,19 @@ export class RabbitMQConnection {
     });
   }
 
+  getChannelAvailable(): Channel | null {
+    return this.channel;
+  }
+
   async close(): Promise<void> {
     if(this.reconnectTimeout){
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = null;
     };
+
+    const closeError = new ErrorSystem.ApplicationError("RabbitMQ connection is closing");
+    this.waiters.forEach(({ reject }) => reject(closeError));
+    this.waiters = [];
 
     await this.channel?.close();
     await this.connection?.close();
