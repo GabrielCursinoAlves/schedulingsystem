@@ -45,6 +45,12 @@ export class RabbitMQConsumer {
         return;
       }
 
+      if(error instanceof ErrorSystem.ConflictError) {
+        console.error(`RabbitMQ Conflict ${error.name}: ${error.message}`);
+        channel.nack(message, false, false);
+        return;
+      }
+
       if(error instanceof ErrorSystem.TooManyRequestsError) {
         console.error(`RabbitMQ Too Many Requests error`);
         await this.retryMessage(channel, message);
@@ -96,7 +102,8 @@ export class RabbitMQConsumer {
   }
 
   async close(): Promise<void> {
-    const channel = await this.connection.getChannel();
+    const channel = this.connection.getChannelAvailable();
+    if (!channel) return;
     await channel.close();
   }
 }
