@@ -11,5 +11,5 @@ export async function bootstrap(app: ControllerZodInstance) {
   const consumerRabbitMQ = RabbitMQConsumer.getInstance(connectionRabbitMQ, ControllerNotificationSystemDi.createHandler);
   await consumerRabbitMQ.readyConsumer();
   
-  gracefulShutdown(app, connectionRabbitMQ);
+  gracefulShutdown(app, connectionRabbitMQ, consumerRabbitMQ);
 }

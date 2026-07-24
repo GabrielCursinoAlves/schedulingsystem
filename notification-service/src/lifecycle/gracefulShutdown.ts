@@ -1,8 +1,9 @@
 import { RabbitMQConnection } from "@/infrastructure/messaging/RabbitMQConnection.js";
+import { RabbitMQConsumer } from "@/infrastructure/messaging/RabbitMQConsumer.js";
 import type { ControllerZodInstance } from "@/types/zod/InstanceZodType.js";
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 
-export const gracefulShutdown = (app: ControllerZodInstance, rabbitMQ: RabbitMQConnection) => {
+export const gracefulShutdown = (app: ControllerZodInstance, rabbitMQ: RabbitMQConnection, consumer: RabbitMQConsumer) => {
   let isShuttingDown = false;
   
   const shutdown = async(signal: string) => {
@@ -24,6 +25,7 @@ export const gracefulShutdown = (app: ControllerZodInstance, rabbitMQ: RabbitMQC
   }
 
   app.addHook("onClose", async () => {
+    await consumer.close();
     await rabbitMQ.close();
     await prisma.$disconnect();
   });
