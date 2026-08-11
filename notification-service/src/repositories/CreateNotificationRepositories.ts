@@ -1,19 +1,20 @@
 import { EventypeRecord, NotificationDispatchReturn } from "@/types/prisma/NotificationDispatchType.js";
 import { ICreateNotification } from "@/interface/ICreateNotification.js";
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
-import { Prisma } from "@generated/prisma/client.js";
+import { UpdateNotificationType } from "@/types/zod/NotificationType.js";
+import { DispatchEventype, Prisma } from "@generated/prisma/client.js";
 import { SchemaTypeZod } from "@/types/index.js";
 import { ErrorSystem } from "@/error/index.js";
 
 export class CreateNotification implements ICreateNotification {
-  async execute(data: SchemaTypeZod["SchemaOutboxSchedulingSystem"]): Promise<NotificationDispatchReturn> {
+  async create(data: SchemaTypeZod["SchemaOutboxSchedulingSystem"]): Promise<NotificationDispatchReturn> {
     const { event, jobId, eventId, payload } = data;
     try {
       const dataDispatch = await prisma.notificationDispatch.create({
         data: {
           event_id: eventId,
           job_id: jobId,
-          event_type: EventypeRecord[event],
+          event_type: EventypeRecord[event] as DispatchEventype,
           user_id: payload.userId,
           phone: payload.phone,
           message: payload.message,
@@ -40,5 +41,27 @@ export class CreateNotification implements ICreateNotification {
 
       throw new ErrorSystem.ApplicationError("Unexpected database error.");
     }
+  }
+
+  async update(id: string, data: UpdateNotificationType): Promise<void> {
+    const { status, processed_at, error_reason } = data;
+    try {
+      await prisma.notificationDispatch.update({
+        where: { id },
+        data: {
+          status,
+          ...(processed_at && { processed_at }),
+          ...(error_reason && { error_reason })
+        }
+      });
+
+    }catch (error) {
+      if(error instanceof Prisma.PrismaClientValidationError) {
+        throw new ErrorSystem.ApplicationError(`Invalid field or data sent to database. Error: ${error.message}`);
+      };
+
+      throw new ErrorSystem.ApplicationError("Unexpected database error.");
+    }
+
   }
 }
