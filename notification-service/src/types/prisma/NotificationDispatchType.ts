@@ -1,8 +1,7 @@
 import { DispatchEventype, DispatchSeverity } from "@generated/prisma/client.js";
-import { SchemaTypeZod } from "@/types/index.js";
 
 export const EventypeRecord: Record<
-  SchemaTypeZod["SchemaOutboxSchedulingSystem"]["event"],
+  typeof DispatchEventype[keyof typeof DispatchEventype],
   keyof typeof DispatchEventype
 > = {
   "notification.send_sms": "notification_send_sms",

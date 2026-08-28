@@ -9,6 +9,7 @@ import { ErrorSystem } from "@/error/index.js";
 export class CreateNotification implements ICreateNotification {
   async create(data: SchemaTypeZod["SchemaOutboxSchedulingSystem"]): Promise<NotificationDispatchReturn> {
     const { event, jobId, eventId, payload } = data;
+
     try {
       const dataDispatch = await prisma.notificationDispatch.create({
         data: {
@@ -32,36 +33,52 @@ export class CreateNotification implements ICreateNotification {
 
     }catch (error) {
       if(error instanceof Prisma.PrismaClientValidationError) {
-        throw new ErrorSystem.ApplicationError(`Invalid field or data sent to database. Error: ${error.message}`);
+        throw new ErrorSystem.UnavailableError("Database connection failed.", 503);
       };
 
-      if(error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new ErrorSystem.ConflictError("This event has already been scheduled.");
+      if(error instanceof Prisma.PrismaClientValidationError) {
+        throw new ErrorSystem.ValidationError("Invalid field or data sent to database.", 400);
+      };
+
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        throw new ErrorSystem.ConflictError("Duplicate event_id value violates unique constraint.", 409);
       }
 
-      throw new ErrorSystem.ApplicationError("Unexpected database error.");
+      throw new ErrorSystem.ApplicationError("Unexpected database error.", 500);
     }
   }
 
   async update(id: string, data: UpdateNotificationType): Promise<void> {
-    const { status, processed_at, error_reason } = data;
+    const { status, processed_at, error_reason, attempt: attempts } = data;
     try {
       await prisma.notificationDispatch.update({
         where: { id },
         data: {
           status,
           ...(processed_at && { processed_at }),
-          ...(error_reason && { error_reason })
+          ...(error_reason && { error_reason }),
+          ...(attempts && { attempts }),
         }
       });
 
     }catch (error) {
+      if(error instanceof Prisma.PrismaClientInitializationError) {
+        throw new ErrorSystem.UnavailableError("Database connection failed.", 503);
+      }
+
       if(error instanceof Prisma.PrismaClientValidationError) {
-        throw new ErrorSystem.ApplicationError(`Invalid field or data sent to database. Error: ${error.message}`);
+        throw new ErrorSystem.ValidationError("Invalid field or data sent to database.", 400);
       };
 
-      throw new ErrorSystem.ApplicationError("Unexpected database error.");
-    }
+      if(error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new ErrorSystem.NotFoundError(`Notification with id ${id} not found.`, 404);
+      }
 
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        throw new ErrorSystem.ConflictError("Duplicate event_id value violates unique constraint.", 409);
+      }
+
+      throw new ErrorSystem.ApplicationError("Unexpected database error.", 500);
+    }
   }
 }
