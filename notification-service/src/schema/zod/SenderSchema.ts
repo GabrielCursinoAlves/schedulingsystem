@@ -5,4 +5,4 @@ export const SchemaSender = z.object({
   message: z.string(),
   email: z.string().email().optional(),
   severity: z.enum(["low", "medium", "high"]).optional()
-});
+}); 
