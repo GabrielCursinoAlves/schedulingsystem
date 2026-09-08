@@ -21,7 +21,7 @@ export class RabbitMQConsumer {
 
   async readyConsumer(): Promise<void> {
     const channel = await this.connection.getChannel();
-
+   
     await channel.consume(configRabbitMQ.queue.job, async(message) => {
       if(!message) return;
 
@@ -46,8 +46,8 @@ export class RabbitMQConsumer {
       }
 
       if(error instanceof ErrorSystem.ConflictError) {
-        console.error(`RabbitMQ Conflict ${error.name}: ${error.message}`);
-        channel.nack(message, false, false);
+        console.error(`RabbitMQ Conflict ${error.name}: ${error.message}`); 
+        channel.ack(message);
         return;
       }
 
