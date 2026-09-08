@@ -26,5 +26,5 @@ export function ensureJsonObject(data: SchemaTypeZod["SchemaCreateSchedulingPayl
     }),
     }
   };
- 
+  
 }

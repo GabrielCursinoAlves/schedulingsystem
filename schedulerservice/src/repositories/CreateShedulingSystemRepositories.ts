@@ -55,5 +55,5 @@ export class CreateShedulingSystem {
             
       throw new ErrorSystem.ApplicationError("Unexpected database error."); 
     }
-  }
+  } 
 }

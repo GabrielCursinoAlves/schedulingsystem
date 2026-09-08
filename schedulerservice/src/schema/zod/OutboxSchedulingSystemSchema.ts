@@ -12,4 +12,4 @@ export const SchemaOutboxSchedulingSystem = z.object({
     email_alert: z.email().optional(),
     severity: z.enum(["low", "medium", "high"]).optional()
   })
-});
+}); 
