@@ -12,7 +12,7 @@ export const gracefulShutdown = (app: ControllerZodInstance, rabbitMQ: RabbitMQC
 
     const timeout = setTimeout(() => {
       process.exit(1);
-    }, 8000);
+    }, 16000);
 
     try {
       await app.close();

@@ -9,6 +9,7 @@ export class RabbitMQConnection {
   private connection: Connection | null = null;
   private static instance: RabbitMQConnection;
   private channel: Channel | null = null;
+  private isIntentionalClose = false;
   private waiters: Waiter[] = [];
   private isConnecting = false;
   private retryCount = 0;
@@ -31,13 +32,20 @@ export class RabbitMQConnection {
       });
   
       this.connection.on("close", () => {
+        if(this.isIntentionalClose) {
+          console.log("RabbitMQ connection closed gracefully");
+          this.isIntentionalClose = false;
+          return;
+        }
+
+        console.log("RabbitMQ connection closed unexpectedly");
         this.connection = null;
         this.channel = null;
         this.reconnect(); 
       });
 
       this.channel = await this.connection.createChannel();
-      await this.channel.prefetch(10);
+      await this.channel.prefetch(1);
 
       this.channel.on("error", (err) => {
         console.error("RabbitMQ channel error:", err);
@@ -90,7 +98,9 @@ export class RabbitMQConnection {
   }
 
   async close(): Promise<void> {
-    if(this.reconnectTimeout){
+    this.isIntentionalClose = true;
+    
+    if(this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = null;
     };
