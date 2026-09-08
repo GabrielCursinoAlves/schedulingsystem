@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx tsx --watch --no-warnings src/server.ts",
+    "prisma:migrate:reset": "npx prisma migrate reset",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
