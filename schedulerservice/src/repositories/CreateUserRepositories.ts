@@ -6,7 +6,7 @@ import { ErrorSystem } from "@/error/index.js";
 
 export class CreateUser {
   async execute(data: UserParams): Promise<UserReturns> {
-    const {username, phone, email, password} = data;
+    const { username, phone, email, email_alert, password } = data;
     
     const userEmailExist = await prisma.user.findUnique({ where:{ email }}); 
   
@@ -22,6 +22,7 @@ export class CreateUser {
           username,
           email,
           phone,
+          email_alert,
           password: storedHash
         }
       }); 

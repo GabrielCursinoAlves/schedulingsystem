@@ -1,4 +1,5 @@
 export type UserParams = {
+  email_alert: string,
   username: string,
   password: string,
   email: string,
