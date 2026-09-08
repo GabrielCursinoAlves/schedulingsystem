@@ -6,7 +6,7 @@ type BaseSession = {
   user_id: string
 }
 
-export type SessionParams = Omit<UserParams, "username" | "phone">;
+export type SessionParams = Omit<UserParams, "username" | "email_alert" | "phone">;
 
 export type Session = Omit<BaseSession, "expiresAt"> & {
   expiresAt: Date

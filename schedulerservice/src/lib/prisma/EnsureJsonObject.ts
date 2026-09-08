@@ -6,7 +6,7 @@ import { randomUUID } from "node:crypto";
 export function ensureJsonObject(data: SchemaTypeZod["SchemaCreateSchedulingPayload"], fields: SchedulingPayload): SchemaTypeZod["SchemaOutboxSchedulingSystem"] {
   
   const notificationPayload = PayloadPatternValidation(data);
-  const { jobId, phone, userId } = fields;
+  const { jobId, phone, userId, email_alert } = fields;
  
   return {
     eventId: randomUUID(),
@@ -14,7 +14,12 @@ export function ensureJsonObject(data: SchemaTypeZod["SchemaCreateSchedulingPayl
     jobId,
     payload: {
       userId,
-      phone,
+      ...(notificationPayload.type === "send_sms" && {
+        phone: phone,
+      }),
+      ...(notificationPayload.type === "send_alert" && {
+        email_alert: email_alert,
+      }),
       message: notificationPayload.message,
       ...(notificationPayload.type === "send_alert" && {
       severity: notificationPayload.severity,

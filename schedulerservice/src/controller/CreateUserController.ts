@@ -10,10 +10,9 @@ export class CreateUser {
     
     if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
 
-    const { username, phone, email, password } = result.data;
-    
-    const userData = { username, email, phone: phone.replace(/\D/g, ''), password };
-    
+    const { username, phone, email, password, email_alert } = result.data;
+   
+    const userData = { username, email, email_alert, phone, password };
     const UserCreate = await this.StorageUserServices.execute(userData);
     
     return reply.code(201).send({

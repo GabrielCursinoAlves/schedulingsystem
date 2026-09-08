@@ -8,6 +8,7 @@ type BaseSheduling = {
 };
 
 export type SchedulingPayload = {
+  email_alert: string,
   userId: string,
   phone: string,
   jobId: string
@@ -18,6 +19,7 @@ export type SchedulingParams = Omit<BaseSheduling, "payload"> & {
 }
 
 export type SchedulingReturns = Prisma.ScheduledJobGetPayload<{}> & {
+  email_alert: string,
   phone: string,
   event: string
 }

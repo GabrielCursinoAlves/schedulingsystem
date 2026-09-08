@@ -11,7 +11,10 @@ export class CreateShedulingSystem {
     try {
       const user = await tx.user.findUnique({ 
         where: { id: user_id }, 
-        select: { phone: true } 
+        select: { 
+          phone: true, 
+          email_alert: true 
+        } 
       });
      
       if(!user) throw new ErrorSystem.NotFound("User does not exist.");
@@ -33,6 +36,7 @@ export class CreateShedulingSystem {
       return {
         ...createSheduling,
         phone: user.phone,
+        email_alert: user.email_alert,
         event: `notification.${dataJobPayload.data.type}`
       };
 
