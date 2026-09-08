@@ -10,7 +10,8 @@ export const EventypeRecord: Record<
 
 export type NotificationDispatchReturn = {
   id: string,
-  phone: string,
   message: string,
-  severity: DispatchSeverity
+  phone: string | null,
+  email_alert: string | null,
+  severity: DispatchSeverity | null
 };

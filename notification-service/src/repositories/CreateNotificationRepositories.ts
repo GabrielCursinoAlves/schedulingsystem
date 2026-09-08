@@ -13,26 +13,28 @@ export class CreateNotification implements ICreateNotification {
     try {
       const dataDispatch = await prisma.notificationDispatch.create({
         data: {
-          event_id: eventId,
           job_id: jobId,
-          event_type: EventypeRecord[event] as DispatchEventype,
+          event_id: eventId,
           user_id: payload.userId,
-          phone: payload.phone,
           message: payload.message,
-          ...(payload.severity && { severity: payload.severity })
+          ...(payload.phone && { phone: payload.phone }),
+          event_type: EventypeRecord[event] as DispatchEventype,
+          ...(payload.severity && { severity: payload.severity }),
+          ...(payload.email_alert && { email_alert: payload.email_alert })
         },
         select : {
           id: true,
           phone: true,
           message: true,
-          severity: true
+          severity: true,
+          email_alert: true
         }
       });
       
       return dataDispatch;
 
     }catch (error) {
-      if(error instanceof Prisma.PrismaClientValidationError) {
+      if(error instanceof Prisma.PrismaClientInitializationError) {
         throw new ErrorSystem.UnavailableError("Database connection failed.", 503);
       };
 
