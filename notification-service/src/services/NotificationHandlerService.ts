@@ -12,14 +12,15 @@ export class NotificationHandler implements INotificationHandler {
   ) {}
 
   async execute(data: SchemaTypeZod["SchemaOutboxSchedulingSystem"]): Promise<void> {
-    const { id, phone, message, severity } = await this.createNotification.create(data);
+    const { id, phone, email_alert, message, severity } = await this.createNotification.create(data);
 
     try {
       const senderService = this.defineSender(data.event);
       const sendResult = await senderService.send({
-        ...( severity && { severity }),
+        message,
         ...( phone && { phone }),
-        message
+        ...( severity && { severity }),
+        ...( email_alert && { email_alert }),
       });
 
       if(sendResult.success) {
