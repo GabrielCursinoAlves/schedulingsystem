@@ -26,7 +26,9 @@ export class NotificationHandler implements INotificationHandler {
       if(sendResult.success) {
         return await this.createNotification.update(id, {
           processed_at: new Date(),
-          status:"sent"
+          status:"sent",
+          ...(sendResult.errorMessage?.attempt && sendResult.errorMessage.attempt > 0 && 
+          { attempt: sendResult.errorMessage.attempt, status: "retry_send" })
         });
       }
 

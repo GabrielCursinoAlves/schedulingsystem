@@ -1,12 +1,11 @@
 import { TwilioRestException } from "@/lib/twilio/TwilioRestException.js";
 import { ISenderNotification } from "@/interface/ISenderNotication.js";
-import { MockRequestClient } from "@/test/MockRequestClient.js";
 import { SenderType } from "@/types/zod/SenderType.js";
 import { Env } from "@/config/environment/env.js";
 import { SchemaTypeZod } from "@/types/index.js";
 import twilio, { Twilio } from "twilio";
 
-export class TwilioService implements ISenderNotification{
+export class TwilioService implements ISenderNotification {
   private retryCodeStatus = [ 429, 500, 502, 503, 504 ];
   private client: Twilio;
 
@@ -28,9 +27,15 @@ export class TwilioService implements ISenderNotification{
         body: data.message
       });
   
-      return { success: true };
+      return { 
+        success: true, 
+        errorMessage: {
+          attempt
+        }
+      };
 
-    } catch (error) {
+    } catch (error ) {
+      
       if(TwilioRestException(error) && error.status !== null && this.retryCodeStatus.includes(error.status) && attempt < Env.TWILIO_MAX_RETRIES) {
         await this.retrySend(attempt);
         attempt++;
