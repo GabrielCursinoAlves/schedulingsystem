@@ -20,3 +20,14 @@ export function toNumber(name: string): number {
 
   return enValue;
 }
+
+export function toEmail(name: string): string {
+  const enValue = process.env[name];
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if(!enValue || !emailPattern.test(enValue)) {
+    throw new Error(`missing field ${enValue} not is email`);
+  }
+
+  return enValue;
+}

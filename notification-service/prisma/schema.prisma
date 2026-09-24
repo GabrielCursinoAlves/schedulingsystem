@@ -20,6 +20,7 @@ enum DispatchSeverity {
 
 enum DispatchStatus {
   processing
+  retry_send
   pending
   failed
   sent

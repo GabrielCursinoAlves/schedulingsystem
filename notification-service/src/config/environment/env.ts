@@ -1,4 +1,4 @@
-import { required, toNumber } from "./validation/EnvPatternValidation.js";
+import { required, toNumber, toEmail } from "./validation/EnvPatternValidation.js";
 
 export const Env = {
   PORT: toNumber("PORT"),
@@ -7,9 +7,13 @@ export const Env = {
   RABBITMQ_URL: required("RABBITMQ_URL"),
   MAX_RETRY_DELAY: toNumber("MAX_RETRY_DELAY"),
   MAX_RETRY_COUNT : toNumber("MAX_RETRY_COUNT"),
+  RESEND_FROM_EMAIL: toEmail("RESEND_FROM_EMAIL"),
+  RESEND_AUTH_TOKEN: required("RESEND_AUTH_TOKEN"),
   TWILIO_AUTH_TOKEN: required("TWILIO_AUTH_TOKEN"),
   TWILIO_ACCOUNT_SID: required("TWILIO_ACCOUNT_SID"),
+  RESEND_MAX_RETRIES: toNumber("RESEND_MAX_RETRIES"),
   TWILIO_MAX_RETRIES: toNumber("TWILIO_MAX_RETRIES"),
   TWILIO_PHONE_NUMBER: required("TWILIO_PHONE_NUMBER"),
+  RESEND_MAX_RETRY_DELAY: toNumber("RESEND_MAX_RETRY_DELAY"),
   TWILIO_MAX_RETRY_DELAY: toNumber("TWILIO_MAX_RETRY_DELAY")
 };

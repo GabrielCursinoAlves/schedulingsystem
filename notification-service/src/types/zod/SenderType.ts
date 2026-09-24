@@ -4,6 +4,6 @@ export type SenderType = {
     status?: number | undefined,
     timestamp?: Date,
     attempt?: number,
-    message: string
+    message?: string
   }
 };

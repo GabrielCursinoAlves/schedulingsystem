@@ -4,6 +4,7 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
+    "dev:on-watch": "npx tsx --no-warnings src/server.ts",
     "dev": "npx tsx --watch --no-warnings src/server.ts",
     "prisma:migrate:reset": "npx prisma migrate reset",
     "prisma:migrate": "npx prisma migrate dev",
@@ -22,6 +23,7 @@
     "fastify": "^5.6.1",
     "fastify-type-provider-zod": "^6.1.0",
     "prisma": "^7.2.0",
+    "resend": "^6.28.0",
     "twilio": "^6.1.0",
     "zod": "^4.4.3"
   },
