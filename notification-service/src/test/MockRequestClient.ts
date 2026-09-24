@@ -8,12 +8,6 @@ export class MockRequestClient extends  RequestClient {
   async request<TData>(opts: RequestOptions<TData, object>) {
     if (this.forcedStatusCode) {
       const errorBodies: Record<number, object> = {
-        401: {
-          code: 20003,
-          message: "Authentication Error - No credentials provided",
-          more_info: "https://www.twilio.com/docs/errors/20003",
-          status: 401,
-        },
         429: {
           code: 20429,
           message: "Too Many Requests",
@@ -26,15 +20,27 @@ export class MockRequestClient extends  RequestClient {
           more_info: "https://www.twilio.com/docs/errors/20500",
           status: 500,
         },
+        502: {
+          code: 20502,
+          message: "Bad Gateway",
+          more_info: "https://www.twilio.com/docs/errors/20502",
+          status: 502,
+        },
         503: {
           code: 20503,
           message: "Service Unavailable",
           more_info: "https://www.twilio.com/docs/errors/20503",
           status: 503,
         },
+        504: {
+          code: 20504,
+          message: "Gateway Timeout",
+          more_info: "https://www.twilio.com/docs/errors/20504",
+          status: 504,
+        }
       };
 
-      const body = errorBodies[this.forcedStatusCode] ?? { message: "Erro simulado" };
+      const body = errorBodies[this.forcedStatusCode] ?? { message: "Error simulated" };
 
       return {
         statusCode: this.forcedStatusCode,
