@@ -7,6 +7,13 @@ datasource db {
   provider = "postgresql"
 }
 
+enum DispatchStatus {
+  completed
+  pending
+  queued
+  failed
+}
+
 model User {
   id             String         @id @default(uuid())
   username       String
@@ -34,17 +41,17 @@ model ScheduledJob {
 }
 
 model Outbox {
-  id           String       @id @default(uuid())
+  id           String         @id @default(uuid())
   schedule_id  String
-  schedule_job ScheduledJob @relation(fields: [schedule_id], references: [id])
-  event_id     String       @unique
+  schedule_job ScheduledJob   @relation(fields: [schedule_id], references: [id])
+  event_id     String         @unique
   event        String
   payload      Json
-  status       String       @default("pending")
-  scheduled_at DateTime     @default(now()) @db.Timestamptz()
+  status       DispatchStatus @default(pending)
+  scheduled_at DateTime       @default(now()) @db.Timestamptz()
   error_reason String?
   processed_at DateTime?
-  created_at   DateTime     @default(now()) @db.Timestamptz()
+  created_at   DateTime       @default(now()) @db.Timestamptz()
 
   @@index([schedule_id])
   @@index([status])
