@@ -21,7 +21,27 @@ services:
     volumes:
       - ./notification-service:/app           
       - /app/dist  
-
+  worker-notification:
+    env_file:
+      - notification-service/.env
+      - ./.env.root
+    build:
+      context: notification-service
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    working_dir: /app
+    command: sh -c "npm run build && npm run worker"
+    depends_on:
+      pg:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      app-network:
+    volumes:
+      - ./notification-service:/app           
+      - /app/dist  
 networks:
   app-network:
     driver: bridge

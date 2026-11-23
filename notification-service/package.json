@@ -3,14 +3,19 @@
   "version": "1.0.0",
   "main": "server.ts",
   "type": "module",
-  "scripts": {
-    "dev:on-watch": "npx tsx --no-warnings src/server.ts",
+  "scripts": { 
+    "pm2:start-development": "npx pm2 start ecosystem.config.cjs --env development",
+    "dev:no-watch": "npx tsx --no-warnings src/server.ts",
     "dev": "npx tsx --watch --no-warnings src/server.ts",
     "prisma:migrate:reset": "npx prisma migrate reset",
+    "worker": "node dist/src/workers/OutboxWorker.js",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
-    "build": "tsc && tsc-alias"
+    "build": "tsc && tsc-alias",
+    "pm2:list": "npx pm2 list",
+    "pm2:kill": "npx pm2 kill",
+    "pm2:logs": "npx pm2 log"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +27,7 @@
     "cron-parser": "^5.4.0",
     "fastify": "^5.6.1",
     "fastify-type-provider-zod": "^6.1.0",
+    "pm2": "^6.0.14",
     "prisma": "^7.2.0",
     "resend": "^6.28.0",
     "twilio": "^6.1.0",

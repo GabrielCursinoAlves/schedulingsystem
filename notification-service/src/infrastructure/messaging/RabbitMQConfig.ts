@@ -4,6 +4,7 @@ export const configRabbitMQ = {
   },
   queue: {
     job: "job.queue",
-    retry: "job.retry"
+    retry: "job.retry",
+    notification: "job.notification"
   }
 };
