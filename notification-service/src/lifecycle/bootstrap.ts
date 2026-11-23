@@ -6,10 +6,15 @@ import { gracefulShutdown } from "./gracefulShutdown.js";
 
 export async function bootstrap(app: ControllerZodInstance) {
   const connectionRabbitMQ = RabbitMQConnection.getInstance();
-  await connectionRabbitMQ.connect();
-  
   const consumerRabbitMQ = RabbitMQConsumer.getInstance(connectionRabbitMQ, ControllerNotificationSystemDi.createHandler);
-  await consumerRabbitMQ.readyConsumer();
+
+  connectionRabbitMQ.on("connected", () => {
+    consumerRabbitMQ.readyConsumer().catch((error) => {
+       console.error("Failed to start consumer:", error);
+    });
+  });
+
+  await connectionRabbitMQ.connect();
   
   gracefulShutdown(app, connectionRabbitMQ, consumerRabbitMQ);
 }

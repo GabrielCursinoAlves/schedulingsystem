@@ -3,14 +3,15 @@ import { configRabbitMQ } from "@/infrastructure/messaging/RabbitMQConfig.js";
 import { INotificationHandler } from "@/interface/ICreateNotification.js";
 import { ErrorSystem, ErrorValidation } from "@/error/index.js";
 import { RabbitMQConnection } from "./RabbitMQConnection.js";
-import { Channel, ConsumeMessage } from "amqplib";
 import { Env } from "@/config/environment/env.js";
+import { Channel, ConsumeMessage } from "amqplib";
 import { SchemaTypeZod } from "@/types/index.js";
 
 export class RabbitMQConsumer {
   private static instance: RabbitMQConsumer;
+  private consumerTag: string | null = null;
 
-  private constructor(private readonly connection: RabbitMQConnection, private readonly notificationHandler: INotificationHandler) {}
+  private constructor( private readonly connection: RabbitMQConnection, private readonly notificationHandler: INotificationHandler) { }
   
   static getInstance(connection: RabbitMQConnection, notificationHandler: INotificationHandler): RabbitMQConsumer {
     if (!RabbitMQConsumer.instance) {
@@ -21,22 +22,23 @@ export class RabbitMQConsumer {
 
   async readyConsumer(): Promise<void> {
     const channel = await this.connection.getChannel();
+    this.consumerTag = null;
    
-    await channel.consume(configRabbitMQ.queue.job, async(message) => {
+    const { consumerTag } = await channel.consume(configRabbitMQ.queue.job, async(message) => {
       if(!message) return;
 
       this.handleMessage(channel, message).catch((error) => {
         console.error(`Error handling message:`, error);
       });
     });
+
+    this.consumerTag = consumerTag;
   }
 
-  async handleMessage(channel: Channel, message: ConsumeMessage): Promise<SchemaTypeZod["SchemaOutboxSchedulingSystem"] | void> {
+  async handleMessage(channel: Channel, message: ConsumeMessage): Promise<void> {
     try {
       const payload = this.validatePayload(message);
-
       await this.processMessage(payload);
-      channel.ack(message);
 
     } catch (error) {
       if(error instanceof ErrorValidation.ZodValidationError || error instanceof ErrorValidation.MalformedPayloadError) {
@@ -59,7 +61,13 @@ export class RabbitMQConsumer {
 
       console.error(`RabbitMQ Unexpected error:`, error);
       await this.retryMessage(channel, message);
+      return;
+    }
 
+    try {
+      channel.ack(message);
+    } catch (error) {
+      console.error(`Ack failed (channel closed), broker will redeliver:`, error);
     }
   }
 
@@ -72,7 +80,6 @@ export class RabbitMQConsumer {
   }
 
   validatePayload(message: ConsumeMessage): SchemaTypeZod["SchemaOutboxSchedulingSystem"] {
-    
     const resultPayload = SchemaOutboxSchedulingSystem.safeParse(this.parsePayload(message));
 
     if(!resultPayload.success) {
@@ -90,11 +97,22 @@ export class RabbitMQConsumer {
       return;
     };
 
-    channel.publish(configRabbitMQ.exchanges.name, configRabbitMQ.queue.retry, message.content, {
-      headers: { 'x-retry-count': retryErrorCount },
-    });
+    try { 
+      const channelConfirm = await this.connection.getChannelConfirm();
+      await new Promise<void>((resolve, reject) => {
+        channelConfirm.sendToQueue(configRabbitMQ.queue.retry, message.content, 
+          { headers: { 'x-retry-count': retryErrorCount }, 
+            persistent: true 
+          }, 
+          (err) => err ? reject(err) : resolve()
+        );
+      });
 
-    channel.ack(message);
+      channel.ack(message);
+
+    }catch(error) {
+      channel.nack(message, false, false);
+    }
   }
 
   async processMessage(payload: SchemaTypeZod["SchemaOutboxSchedulingSystem"]): Promise<void> {
@@ -103,7 +121,8 @@ export class RabbitMQConsumer {
 
   async close(): Promise<void> {
     const channel = this.connection.getChannelAvailable();
-    if (!channel) return;
-    await channel.close();
+    if(!channel || !this.consumerTag) return;
+    try { await channel.cancel(this.consumerTag); }catch { }
+    this.consumerTag = null;
   }
 }
