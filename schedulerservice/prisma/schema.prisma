@@ -8,7 +8,6 @@ datasource db {
 }
 
 enum DispatchStatus {
-  completed
   pending
   queued
   failed
