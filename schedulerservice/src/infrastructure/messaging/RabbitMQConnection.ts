@@ -1,15 +1,19 @@
 import { RabbitMQTopology } from "@/infrastructure/messaging/RabbitMQTopology.js";
-import  { Waiter } from "@/interface/RabbitMQ.js";
+import  { Waiter, WaiterConfirm } from "@/interface/RabbitMQ.js";
+import { Connection, Channel, ConfirmChannel } from "amqplib";
 import { Env } from "@/config/environment/env.js";
-import { Connection, Channel } from "amqplib";
+import { ErrorSystem } from "@/error/index.js";
 import * as amqp from "amqplib";
 
 export class RabbitMQConnection {
   constructor(private rabbitMQTopology = new RabbitMQTopology){}
   private reconnectTimeout: NodeJS.Timeout | null = null;
+  private channelConfirm: ConfirmChannel | null = null;
   private connection: Connection | null = null;
+  private waitersConfirm: WaiterConfirm[] = [];
   private static instance: RabbitMQConnection;
   private channel: Channel | null = null;
+   private isIntentionalClose = false;
   private waiters: Waiter[] = [];
   private isConnecting = false;
   private retryCount = 0;
@@ -26,13 +30,28 @@ export class RabbitMQConnection {
     try {
       const rabbitmq_url = Env.RABBITMQ_URL;
       
-      this.connection = await amqp.connect(rabbitmq_url!);   
+      this.connection = await amqp.connect(rabbitmq_url!);
+      const conn = this.connection;
+      
+      const onChannelError = (name: string) => (err: unknown) => {
+        console.error(`RabbitMQ ${name} error:`, err);
+        if (this.connection === conn) conn.close().catch(() => {});
+      };
       
       this.connection.on("error", (err) => {
         console.error("RabbitMQ error:", err);
       });
   
       this.connection.on("close", () => {
+        if(this.connection != conn) return;
+
+        if(this.isIntentionalClose) {
+          console.log("RabbitMQ connection closed gracefully");
+          this.isIntentionalClose = false;
+          return;
+        }
+        
+        this.channelConfirm = null;
         this.connection = null;
         this.channel = null;
         this.reconnect(); 
@@ -40,14 +59,18 @@ export class RabbitMQConnection {
 
       this.channel = await this.connection.createChannel();
 
-      this.channel.on("error", (err) => {
-        console.error("RabbitMQ channel error:", err);
-        this.channel = null;
-      });
+      this.channel.on("error", onChannelError("channel"));
+
+      this.channelConfirm = await this.connection.createConfirmChannel();
+
+      this.channelConfirm.on("error", onChannelError("confirmchannel"));
 
       await this.rabbitMQTopology.setupMessagingTopology(this.channel);
+
       this.waiters.forEach(({ resolve }) => resolve(this.channel!));
-     
+      this.waitersConfirm.forEach(({ resolve }) => resolve(this.channelConfirm!));
+      
+      this.waitersConfirm = [];
       this.retryCount = 0;
       this.waiters = [];
 
@@ -57,6 +80,16 @@ export class RabbitMQConnection {
       this.waiters.forEach(({ reject }) => reject(error));
       this.waiters = [];
 
+      this.waitersConfirm.forEach(({ reject }) => reject(error));
+      this.waitersConfirm = [];
+
+      this.connection?.close().catch(() => {});
+      this.connection = null;
+
+      this.channelConfirm = null;
+      this.channel = null;
+
+      this.isConnecting = false;
       this.reconnect();
 
     } finally {
@@ -65,7 +98,7 @@ export class RabbitMQConnection {
   }
 
   private reconnect(): void {
-    if(this.isConnecting || this.reconnectTimeout) return;
+    if(this.isIntentionalClose || this.isConnecting || this.reconnectTimeout) return;
 
     const baseDelay = Math.min(2000 * 2 ** this.retryCount, Env.MAX_RETRY_DELAY);
     const jitter = Math.random() * 1000;
@@ -87,15 +120,44 @@ export class RabbitMQConnection {
     });
   }
 
+  async getChannelConfirm(): Promise<ConfirmChannel> {
+    if(this.channelConfirm) return this.channelConfirm;
+
+    return new Promise((resolve, reject) => {
+      this.waitersConfirm.push({ resolve, reject });
+    });
+  }
+
   async close(): Promise<void> {
-    if(this.reconnectTimeout){
+    this.isIntentionalClose = true;
+
+    if(this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = null;
     };
 
-    await this.channel?.close();
-    await this.connection?.close();
-    this.connection = null;
+    const safeClose = async ( name: string, components?: { close(): Promise<void> } | null ) => {
+      try {
+        await components?.close();
+      } catch (err) {
+        console.log(`RabbitMQ ${name} close ignored:`, (err as Error).message);
+      }
+    }
+
+    const closeError = new ErrorSystem.ApplicationError("RabbitMQ connection is closing");
+    this.waiters.forEach(({ reject }) => reject(closeError));
+
+    this.waitersConfirm.forEach(({ reject }) => reject(closeError));
+
+    this.waiters = [];
+    this.waitersConfirm = [];
+
+    await safeClose("channel", this.channel);
+    await safeClose("confirmchannel", this.channelConfirm);
+    await safeClose("connection", this.connection);
+
     this.channel = null;
+    this.channelConfirm = null;
+    this.connection = null;
   }
 }

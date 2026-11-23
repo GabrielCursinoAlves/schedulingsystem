@@ -1,23 +1,20 @@
 import { configRabbitMQ } from "@/infrastructure/messaging/RabbitMQConfig.js";
 import { SchemaTypeZod } from "@/types/index.js";
-import { ErrorSystem } from "@/error/index.js";
-import { Channel } from "amqplib"; 
+import { ConfirmChannel } from "amqplib"; 
 
 export class RabbitMQPublisher {
-  constructor(private readonly channel: Channel) {}
+  constructor(private readonly channelConfirm: ConfirmChannel) {}
   async publishCreateJob(data: SchemaTypeZod["SchemaOutboxSchedulingSystem"]) {
     const message = Buffer.from(JSON.stringify(data));
-    
-    const publishConfirm = this.channel.sendToQueue(
-      configRabbitMQ.queue.delay,
-      message, {
-        persistent: true,
-      }
-    );
 
-    if(!publishConfirm){
-      throw new ErrorSystem.ApplicationError("RabbitMQ backpressure detected");
-    }
-
+    await new Promise<void>((resolve, reject) => {
+      this.channelConfirm.sendToQueue(
+        configRabbitMQ.queue.delay,
+        message, {
+          persistent: true
+        },
+        (err) => err ? reject(err) : resolve()
+      );
+    });
   }
 }
