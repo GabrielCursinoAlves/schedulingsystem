@@ -9,7 +9,9 @@ export class TwilioService implements ISenderNotification {
   private retryCodeStatus = [ 429, 500, 502, 503, 504 ];
   private client: Twilio;
 
-  constructor() { this.client = twilio(Env.TWILIO_ACCOUNT_SID, Env.TWILIO_AUTH_TOKEN); }
+  constructor() { 
+    this.client = twilio(Env.TWILIO_ACCOUNT_SID, Env.TWILIO_AUTH_TOKEN); 
+  }
 
   async send(data: SchemaTypeZod["SchemaSender"]): Promise<SenderType> {
     return await this.sendAttempt(data, 0);

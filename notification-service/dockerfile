@@ -25,4 +25,4 @@ EXPOSE 3305
 ENTRYPOINT [ "./docker-entrypoint.sh" ]
 CMD ["node", "dist/src/server.js"]
 
-HEALTHCHECK --interval=5s --timeout=3s --retries=5 CMD sh -c "curl -f http://localhost:3305/health/live && curl -f http://localhost:3305/health/ready || exit 1"
+HEALTHCHECK --interval=5s --timeout=3s --start-period=30s --retries=5 CMD sh -c "curl -f http://localhost:3305/health/live && curl -f http://localhost:3305/health/ready || exit 1"

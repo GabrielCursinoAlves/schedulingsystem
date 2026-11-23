@@ -21,7 +21,6 @@ export const gracefulShutdown = (app: ControllerZodInstance, rabbitMQ: RabbitMQC
     } catch(err) {
       process.exit(1);
     }
-
   }
 
   app.addHook("onClose", async () => {
