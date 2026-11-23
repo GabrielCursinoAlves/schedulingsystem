@@ -7,7 +7,7 @@ import { Resend } from "resend";
 export class GmailService implements ISenderNotification {
   private retryCodeStatus = [ 429, 500, 502, 503, 504 ];
   private resendClient: Resend;
-
+  
   constructor() { this.resendClient = new Resend(Env.RESEND_AUTH_TOKEN); }
 
   async send(data: SchemaTypeZod["SchemaSender"]): Promise<SenderType> {
@@ -16,7 +16,7 @@ export class GmailService implements ISenderNotification {
 
   private async sendAttempt(data: SchemaTypeZod["SchemaSender"], attempt: number): Promise<SenderType> {
     if(!data.email_alert) {
-      return { success: false, errorMessage: { message: "Email alert is not supported." } };
+      return { success: false, errorMessage: { message: "Email address is required to send e-mail." } };
     }
 
     try {
@@ -30,16 +30,14 @@ export class GmailService implements ISenderNotification {
       if (error) {
         if (error.statusCode && this.retryCodeStatus.includes(error.statusCode) && attempt < Env.RESEND_MAX_RETRIES) {
           await this.retrySend(attempt);
-          attempt++;
-
-          return this.sendAttempt(data, attempt);
+          return this.sendAttempt(data, attempt + 1);
         }
 
         return { 
           success: false, 
           errorMessage: {
-            message: error.message ?? "Failed to send E-mail",
             status: error.statusCode ? error.statusCode : undefined,
+            message: error.message || "Failed to send E-mail",
             timestamp: new Date(),
             attempt
           } 
@@ -56,12 +54,15 @@ export class GmailService implements ISenderNotification {
     } catch (error) {
       if (attempt < Env.RESEND_MAX_RETRIES) {
         await this.retrySend(attempt);
-        attempt++;
-
-        return this.sendAttempt(data, attempt);
+        return this.sendAttempt(data, attempt+1);
       }
-
-      return { success: false, errorMessage: { message: "Failed to send email." } };
+      return { 
+        success: false, 
+        errorMessage: { 
+          message: error instanceof Error && error.message ? error.message : "Failed email provider.",
+          attempt 
+        } 
+      };
     }
   }
 

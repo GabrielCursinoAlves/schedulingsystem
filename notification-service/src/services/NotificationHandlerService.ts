@@ -1,55 +1,69 @@
-import { ICreateNotification, INotificationHandler } from "@/interface/ICreateNotification.js";
+import { ICreateNotification, INotificationHandler, INotificationResult } from "@/interface/ICreateNotification.js";
+import { NotificationOutboxEventRecord } from "@/types/prisma/NotificationDispatchType.js";
 import { ISenderNotification } from "@/interface/ISenderNotication.js";
+import { DispatchOutboxEventype } from "@generated/prisma/client.js";
+import { SenderType } from "@/types/zod/SenderType.js";
 import { SchemaTypeZod } from "@/types/index.js";
-import { ErrorSystem } from "@/error/index.js";
 
 export class NotificationHandler implements INotificationHandler {
   
   constructor(
+    private readonly createNotificationResult: INotificationResult,
     private readonly createNotification: ICreateNotification,
     private readonly gmailSender: ISenderNotification,
-    private readonly smsSender: ISenderNotification,
+    private readonly smsSender: ISenderNotification
   ) {}
 
   async execute(data: SchemaTypeZod["SchemaOutboxSchedulingSystem"]): Promise<void> {
-    const { id, phone, email_alert, message, severity } = await this.createNotification.create(data);
+    let errorMessage: SenderType["errorMessage"] | undefined;
+    let success: boolean = false;
+
+    const { id, phone, email_alert, message, severity, alreadyFinished } = await this.createNotification.create(data);
+
+    if (alreadyFinished) return;
+
+    const senderService = this.defineSender(data.event);
 
     try {
-      const senderService = this.defineSender(data.event);
-      const sendResult = await senderService.send({
-        message,
+      ({ success, errorMessage } = await senderService.send({ message,
         ...( phone && { phone }),
         ...( severity && { severity }),
         ...( email_alert && { email_alert }),
+      }));
+
+    }catch (error) {
+      return await this.createNotificationResult.execute({
+        id,
+        status: "failed",
+        jobId: data.jobId,
+        eventId: data.eventId,
+        error_reason: error instanceof Error && error.message ? error.message : "Unexpected error while sending notification",
+        event_type: NotificationOutboxEventRecord[`${data.event}_result`] as DispatchOutboxEventype
       });
-
-      if(sendResult.success) {
-        return await this.createNotification.update(id, {
-          processed_at: new Date(),
-          status:"sent",
-          ...(sendResult.errorMessage?.attempt && sendResult.errorMessage.attempt > 0 && 
-          { attempt: sendResult.errorMessage.attempt, status: "retry_send" })
-        });
-      }
-
-      return await this.createNotification.update(id, {
-        error_reason: JSON.stringify(sendResult.errorMessage),
-        attempt: sendResult.errorMessage?.attempt,
-        status: "failed"
-      });
-
-    } catch (error) {
-      if(error instanceof ErrorSystem.ApplicationError) {
-        return await this.createNotification.update(id, {
-        error_reason: JSON.stringify({
-        status: error.statusCode,
-        message: error.message,
-        timestamp: new Date()
-        }),
-        status:"failed"
-        });
-      }
     }
+
+    const listenAttempts = Boolean(errorMessage?.attempt && errorMessage?.attempt > 0);
+   
+    if(success) {
+      return await this.createNotificationResult.execute({
+        id,
+        jobId: data.jobId,
+        eventId: data.eventId,
+        attempt: errorMessage?.attempt ?? 0,
+        status: listenAttempts ? "retry_send" : "sent",
+        event_type: NotificationOutboxEventRecord[`${data.event}_result`] as DispatchOutboxEventype
+      });
+    }
+   
+    return await this.createNotificationResult.execute({
+      id,
+      status: "failed",
+      jobId: data.jobId,
+      eventId: data.eventId,
+      attempt: listenAttempts ? errorMessage!.attempt : 0,
+      error_reason: errorMessage?.message || "Failed to send notification",
+      event_type: NotificationOutboxEventRecord[`${data.event}_result`] as DispatchOutboxEventype
+    });
   }
 
   private defineSender(data: SchemaTypeZod["SchemaOutboxSchedulingSystem"]["event"]): ISenderNotification {
