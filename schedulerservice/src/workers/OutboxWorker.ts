@@ -4,95 +4,113 @@ import { RabbitMQPublisher } from "@/infrastructure/messaging/RabbitMQPublisher.
 import { prisma } from "@/infrastructure/database/prisma/Connection.js";
 import { ErrorValidation } from "@/error/index.js";
 
-async function start() {
-  const instanceRabbitMQ = RabbitMQConnection.getInstance();
-  await instanceRabbitMQ.connect();
+let running = true;
+let wake: (() => void) | null = null;
 
-  const channelRabbitMQ = await instanceRabbitMQ.getChannel();
-
-  async function WorkerScheduled(){
-      const nextWindowDate = new Date(Date.now() + 10 * 60 * 1000);
-     
-      try {
-        const rabbitMQPublish = new RabbitMQPublisher(channelRabbitMQ); 
-        
-        const messages = await prisma.outbox.findMany({
-          where: { 
-            status: "pending",
-            scheduled_at: { 
-              lte: nextWindowDate
-            } 
-          },
-          take: 50,
-          orderBy: {
-            scheduled_at: "asc"
-          }
-        });
-        
-        if(!messages.length) return;
-       
-        for(const message of messages) {
-          try {
-            
-            const result = SchemaOutboxSchedulingSystem.safeParse(message.payload);
-            
-            if(!result.success) throw new ErrorValidation.ZodValidationError(result.error);
-
-            const update = await prisma.outbox.updateMany({
-              where: {
-                id: message.id,
-                status: "pending"
-              }, data: { status: "queued" }
-            });
-
-            if(update.count === 0) continue;
-
-            try {
-              await rabbitMQPublish.publishCreateJob(result.data);
-            } catch (error: any) {
-              await prisma.outbox.update({
-                where: { id: message.id },
-                data: { 
-                  status: "failed", 
-                  error_reason: JSON.stringify({
-                    stage: "publish",
-                    error: error?.message,
-                    timestamp: new Date().toISOString()
-                  })
-                }
-              });
-            }
-
-          } catch (error) {
-            console.error("General processing error:", error);
-          }
-
-        };
-      
-      } catch (error) {
-        console.log(`Database query failed: ${error}`);
-      }
-
-  }
-
-  async function RunWorker(){
-
-    while (true) {
-      try {
-        await WorkerScheduled();
-      } catch (error) {
-        console.error("Error dans Work: ", error);
-      }
-      await new Promise(res => setTimeout(res, 30000));
-    }
-  
-  }
-
-  RunWorker();
-
-}
-
-start().catch(err => {
-  console.error("Error:", err);
+const sleep = (ms: number) =>
+  new Promise<void>((resolve) => {
+    const timer = setTimeout(() => { wake = null; resolve(); }, ms);
+    wake = () => { clearTimeout(timer); wake = null; resolve(); };
 });
 
+const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> =>
+  Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout waiting for RabbitMQ channel")), ms)
+    ),
+]);
+
+async function markFailed(id: string, stage: string, error: unknown) {
+  await prisma.outbox.update({
+    where: { id },
+    data: {
+      status: "failed",
+      error_reason: JSON.stringify({
+        stage,
+        error: error instanceof Error ? error.message : String(error),
+        timestamp: new Date().toISOString(),
+      }),
+    },
+  });
+}
+
+async function processBatch(connection: RabbitMQConnection) {
+  const nextWindowDate = new Date(Date.now() + 10 * 60 * 1000);
+
+  const messages = await prisma.outbox.findMany({
+    where: { 
+      status: "pending",
+      scheduled_at: { 
+        lte: nextWindowDate
+      } 
+    },
+    take: 50,
+    orderBy: {
+      scheduled_at: "asc"
+    }
+  });
+
+  if(!messages.length) return;
+
+  const channel = await withTimeout(connection.getChannelConfirm(), 5000);
+  const publisher = new RabbitMQPublisher(channel);
+
+  for(const message of messages) {
+    if(!running) break;
+
+    const result = SchemaOutboxSchedulingSystem.safeParse(message.payload);
+
+    if(!result.success) {
+      const error = new ErrorValidation.ZodValidationError(result.error);
+      await markFailed(message.id, "validation", error).catch(console.error);
+      continue;
+    }
+
+    try {
+      await publisher.publishCreateJob(result.data);
+    } catch (error) {
+      console.error(`Publish failed (id:${message.id}), retrying next cycle:`, error);
+      break;
+    }
+
+    try {
+      await prisma.outbox.updateMany({
+        where: { 
+          id: message.id, status: "pending" }, 
+        data: { 
+          status: "queued", processed_at: new Date() 
+        }
+      });
+    } catch (error) {
+      console.error(`Published but not marked queued (id=${message.id}):`, error);
+    }
+  }
+}
+
+async function start() {
+  const connectionInstance = RabbitMQConnection.getInstance();
+  await connectionInstance.connect();
+
+  const stop = () => { running = false; wake?.(); };
+  process.on("SIGTERM", stop);
+  process.on("SIGINT", stop);
+
+  while(running) {
+    try {
+      await processBatch(connectionInstance);
+    } catch (error) {
+      console.error("Worker cycle failed:", error);
+    }
+    if (!running) break;
+    await sleep(30000);
+  }
+
+  await connectionInstance.close();
+  await prisma.$disconnect();
+}
+
+start().catch((err) => {
+  console.error("Fatal worker error:", err);
+  process.exit(1);
+});
