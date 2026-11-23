@@ -4,12 +4,15 @@ export const configRabbitMQ = {
     dlx: "job.dlx"
   },
   queue: {
-    job: "job.queue",
+    notification_dlq: "job.notification.dlq",
+    notification: "job.notification",
     delay: "job.delay",
     retry: "job.retry",
+    job: "job.queue",
     dlq: "job.dlq"
   }, 
   routingKey: {
+    notification_dead: "job.notification.dead",
     create_job: "job.create",
     dead_job: "job.dead"
   }
